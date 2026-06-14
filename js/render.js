@@ -40,46 +40,49 @@ function formatAltHints(alternatives) {
   return `<div class="muted sub-hint">or ${names.join(", ")}</div>`;
 }
 
-function renderMaterialTreeRows(nodes, iconOverrides, depth = 0) {
+function renderMaterialHints(node) {
+  const subHint = node.substitutedFrom
+    ? `<div class="muted sub-hint">replaces ${node.substitutedFrom}</div>`
+    : "";
+  const metaHint = [
+    node.method ? `<div class="muted sub-hint">${node.method}</div>` : "",
+    node.note ? `<div class="muted sub-hint">${node.note}</div>` : "",
+    formatAltHints(node.alternatives),
+  ].join("");
+  return `${subHint}${metaHint}`;
+}
+
+function renderMaterialCol(node, iconOverrides) {
+  return `<div class="breakdown-material-col">${materialCell(node.marketId, node.name, iconOverrides)}${renderMaterialHints(node)}</div>`;
+}
+
+function renderMaterialTreeNodes(nodes, iconOverrides, depth = 0) {
   return (nodes || [])
     .map((node) => {
-      const indent = depth > 0 ? ` breakdown-row--depth-${Math.min(depth, 4)}` : "";
-      const subHint = node.substitutedFrom
-        ? `<div class="muted sub-hint">replaces ${node.substitutedFrom}</div>`
-        : "";
-      const metaHint = [
-        node.method ? `<div class="muted sub-hint">${node.method}</div>` : "",
-        node.note && !node.craftable
-          ? `<div class="muted sub-hint">${node.note}</div>`
-          : "",
-        node.craftable ? formatAltHints(node.alternatives) : "",
-      ].join("");
+      const depthClass =
+        depth > 0 ? ` breakdown-line--depth-${Math.min(depth, 4)}` : "";
 
       if (node.craftable && node.children?.length) {
-        const nested = renderMaterialTreeRows(node.children, iconOverrides, depth + 1);
+        const nested = renderMaterialTreeNodes(
+          node.children,
+          iconOverrides,
+          depth + 1
+        );
         return `
-        <tr class="breakdown-row breakdown-row--expandable${indent}">
-          <td colspan="2">
-            <details class="breakdown-expand">
-              <summary class="breakdown-expand-summary">
-                ${materialCell(node.marketId, node.name, iconOverrides)}
-                <span class="breakdown-expand-qty num">${node.qty.toLocaleString()}</span>
-              </summary>
-              ${node.note ? `<p class="muted sub-hint breakdown-expand-note">${node.note}</p>` : ""}
-              <table class="data-table gather-table breakdown-nested">
-                <tbody>${nested}</tbody>
-              </table>
-            </details>
-            ${subHint}${metaHint}
-          </td>
-        </tr>`;
+        <details class="breakdown-branch">
+          <summary class="breakdown-line${depthClass}">
+            ${renderMaterialCol(node, iconOverrides)}
+            <div class="breakdown-qty-col">${node.qty.toLocaleString()}</div>
+          </summary>
+          <div class="breakdown-sublist">${nested}</div>
+        </details>`;
       }
 
       return `
-        <tr class="breakdown-row${indent}">
-          <td>${materialCell(node.marketId, node.name, iconOverrides)}${subHint}${metaHint}</td>
-          <td class="num"><b>${node.qty.toLocaleString()}</b></td>
-        </tr>`;
+        <div class="breakdown-line${depthClass}">
+          ${renderMaterialCol(node, iconOverrides)}
+          <div class="breakdown-qty-col">${node.qty.toLocaleString()}</div>
+        </div>`;
     })
     .join("");
 }
@@ -91,12 +94,15 @@ function renderMaterialTree(materials, data, prefs, iconOverrides) {
     prefs,
     shouldApplySubstitution
   );
-  const rows = renderMaterialTreeRows(tree, iconOverrides);
+  const rows = renderMaterialTreeNodes(tree, iconOverrides);
   return `
-    <table class="data-table gather-table breakdown-tree">
-      <thead><tr><th>Material</th><th class="num">Total</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
+    <div class="breakdown-tree">
+      <div class="breakdown-line breakdown-line--head">
+        <div class="breakdown-material-col">Material</div>
+        <div class="breakdown-qty-col">Total</div>
+      </div>
+      ${rows}
+    </div>`;
 }
 
 function renderAlchemySlots(materials, iconOverrides, { compact = false } = {}) {

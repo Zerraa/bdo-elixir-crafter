@@ -834,83 +834,113 @@ a:hover {
   font-weight: 500;
 }
 
-.breakdown-expand {
-  margin: 0;
+.breakdown-tree {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
 }
 
-.breakdown-expand > summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.breakdown-line {
+  display: grid;
+  grid-template-columns: 1fr 5.5rem;
+  gap: 8px;
+  padding: 6px 10px;
+  align-items: start;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.breakdown-line--head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.breakdown-line--head .breakdown-qty-col {
+  font-weight: 500;
+}
+
+.breakdown-material-col {
+  min-width: 0;
+}
+
+.breakdown-qty-col {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.breakdown-line--depth-1 {
+  padding-left: 22px;
+}
+
+.breakdown-line--depth-2 {
+  padding-left: 34px;
+}
+
+.breakdown-line--depth-3,
+.breakdown-line--depth-4 {
+  padding-left: 46px;
+}
+
+.breakdown-branch {
+  border-bottom: none;
+}
+
+.breakdown-branch > summary {
   list-style: none;
   cursor: pointer;
 }
 
-.breakdown-expand > summary::-webkit-details-marker {
+.breakdown-branch > summary::-webkit-details-marker {
   display: none;
 }
 
-.breakdown-expand > summary::before {
+.breakdown-branch > summary.breakdown-line {
+  padding-left: calc(10px + 1.1em);
+}
+
+.breakdown-branch > summary.breakdown-line::before {
   content: "▸";
   color: var(--muted);
-  flex-shrink: 0;
-  margin-right: 2px;
+  position: absolute;
+  margin-left: calc(-1.1em - 2px);
   transition: transform 0.15s ease;
 }
 
-.breakdown-expand[open] > summary::before {
+.breakdown-branch[open] > summary.breakdown-line::before {
   transform: rotate(90deg);
 }
 
-.breakdown-expand-summary {
+.breakdown-branch > summary.breakdown-line {
+  position: relative;
+}
+
+.breakdown-sublist {
   display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-width: 0;
+  flex-direction: column;
 }
 
-.breakdown-expand-qty {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  flex-shrink: 0;
+.breakdown-sublist .breakdown-branch > summary.breakdown-line {
+  padding-left: calc(22px + 1.1em);
 }
 
-.breakdown-expand-note {
-  margin: 6px 0 0 1.25rem;
-  font-size: 0.75rem;
+.breakdown-sublist .breakdown-line--depth-1 {
+  padding-left: 22px;
 }
 
-.breakdown-nested {
-  width: 100%;
-  margin: 8px 0 0;
-  border-collapse: collapse;
+.breakdown-sublist .breakdown-line--depth-2 {
+  padding-left: 34px;
 }
 
-.breakdown-nested td,
-.breakdown-nested th {
-  padding: 4px 8px;
-  font-size: 0.82rem;
-  border-bottom: 1px solid #252525;
-}
-
-.breakdown-row--depth-1 td:first-child {
-  padding-left: 12px;
-}
-
-.breakdown-row--depth-2 td:first-child {
-  padding-left: 20px;
-}
-
-.breakdown-row--depth-3 td:first-child,
-.breakdown-row--depth-4 td:first-child {
-  padding-left: 28px;
-}
-
-.breakdown-tree {
-  margin-top: 0;
+.breakdown-sublist .breakdown-line--depth-3,
+.breakdown-sublist .breakdown-line--depth-4 {
+  padding-left: 46px;
 }
 
 .alchemy-slots {

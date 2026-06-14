@@ -61,7 +61,8 @@ function buildTreeNode(mat, data, prefs, depth, visiting, shouldApplySubstitutio
   }
 
   visiting.add(key);
-  const children = resolveMaterials(entry).map((sub) => {
+  const materials = resolveMaterials(entry);
+  const children = materials.map((sub, slotIndex) => {
     const scaled = {
       name: sub.name,
       marketId: sub.marketId,
@@ -73,7 +74,7 @@ function buildTreeNode(mat, data, prefs, depth, visiting, shouldApplySubstitutio
       prefs,
       shouldApplySubstitution
     );
-    return buildTreeNode(
+    const childNode = buildTreeNode(
       withSub,
       data,
       prefs,
@@ -81,6 +82,13 @@ function buildTreeNode(mat, data, prefs, depth, visiting, shouldApplySubstitutio
       visiting,
       shouldApplySubstitution
     );
+    const slotAlts = (entry.alternatives || []).filter(
+      (a) => a.slotIndex === slotIndex
+    );
+    if (slotAlts.length) {
+      childNode.alternatives = slotAlts;
+    }
+    return childNode;
   });
   visiting.delete(key);
 
@@ -90,7 +98,6 @@ function buildTreeNode(mat, data, prefs, depth, visiting, shouldApplySubstitutio
     qty: mat.qty,
     craftable: true,
     children,
-    alternatives: entry.alternatives,
     note: entry.note,
     method: entry.method,
     substitutedFrom: mat.substitutedFrom,
