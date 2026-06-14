@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elixir Crafting</title>
+  <link rel="icon" href="https://bdocodex.com/items/new_icon/03_etc/07_productmaterial/00005301.webp" type="image/webp">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1>Elixir Crafting</h1>
+      <div class="header-actions">
+        <span id="market-status" class="market-status">Loading prices…</span>
+        <button id="compare-btn" type="button" class="btn btn-secondary">Buy vs Craft</button>
+        <button id="refresh-btn" type="button" class="btn">Refresh</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <aside class="sidebar">
+        <section class="sidebar-section">
+          <center><h2>Craft mode</h2></center>
+          <div class="mode-tabs mode-tabs--three">
+            <button type="button" class="mode-tab active" data-mode="elixirs">Elixirs</button>
+            <button type="button" class="mode-tab" data-mode="harmony">Harmony</button>
+            <button type="button" class="mode-tab" data-mode="party">Monster-Type Harmony</button>
+          </div>
+        </section>
+
+        <div class="mode-panel-slot">
+        <section id="panel-elixirs" class="sidebar-section mode-panel">
+          <label class="field">
+            <span>Elixir Type</span>
+            <div class="elixir-select-row">
+              <span id="elixir-select-icon" class="elixir-select-icon" aria-hidden="true"></span>
+              <select id="elixir-select"></select>
+            </div>
+          </label>
+          <label class="field">
+            <span>Number of Elixir crafts</span>
+            <input id="elixir-crafts" type="number" min="0" value="500">
+          </label>
+          <div id="alchemy-setup" class="alchemy-setup"></div>
+        </section>
+
+        <section id="panel-harmony" class="sidebar-section mode-panel" hidden>
+          <label class="field">
+            <span>Number of Harmony crafts</span>
+            <input id="harmony-crafts" type="number" min="0" value="10">
+          </label>
+          <div class="field">
+            <span>Source Elixirs for Draught</span>
+            <div class="radio-row">
+              <label><input type="radio" name="draught-grade" id="draught-green" value="green" checked>Use Green Elixirs</label>
+              <label><input type="radio" name="draught-grade" id="draught-blue" value="blue">Use Blue Elixirs</label>
+            </div>
+          </div>
+        </section>
+
+        <section id="panel-party" class="sidebar-section mode-panel" hidden>
+          <div class="field">
+            <span>Party Harmony variant</span>
+            <div class="radio-row radio-row--stack" id="party-variant-options"></div>
+          </div>
+          <label class="field">
+            <span>Number of Party draughts</span>
+            <input id="party-crafts" type="number" min="0" value="10">
+          </label>
+        </section>
+        </div>
+
+        <section class="sidebar-section">
+          <center><h2>Shopping preferences</h2></center>
+          <label class="checkbox-row">
+            <input type="checkbox" id="lion-for-bear" checked>
+            Use Lion Blood instead of Bear Blood
+          </label>
+          <label class="checkbox-row checkbox-row--icon">
+            <input type="checkbox" id="ignore-clear-reagent" checked>
+            Ignore Clear Liquid Reagent cost (Mysterious Catalyst exchange)
+          </label>
+        </section>
+      </aside>
+
+      <div class="results">
+        <div id="stats" class="stats"></div>
+
+        <div id="results-split" class="split">
+          <section id="breakdown-panel" class="panel">
+            <div class="panel-header-row panel-header-row--title">
+              <h2 id="breakdown-title">Materials Needed</h2>
+            </div>
+            <div id="breakdown-body" class="panel-scroll"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header-row">
+              <h2>Shopping list <span id="shopping-count" class="shopping-count"></span></h2>
+              <label class="sort-label">
+                Sort
+                <select id="sort-select">
+                  <option value="cost">Cost</option>
+                  <option value="name">Name</option>
+                  <option value="qty">Quantity</option>
+                </select>
+              </label>
+            </div>
+            <div class="panel-note-slot">
+              <p id="shopping-note" class="shopping-note" hidden></p>
+            </div>
+            <div class="panel-scroll">
+              <table class="data-table shopping-table">
+                <colgroup>
+                  <col class="col-material">
+                  <col class="col-qty">
+                  <col class="col-price">
+                  <col class="col-total">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>Material</th>
+                    <th class="num">Qty</th>
+                    <th class="num">Price</th>
+                    <th class="num">Total</th>
+                  </tr>
+                </thead>
+                <tbody id="shopping-body"></tbody>
+                <tfoot id="shopping-footer"></tfoot>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <p class="footnote">* Some market prices unavailable. Mushrooms use Mushroom Vendor prices; herbs use Herb Vendor prices; Harmony catalyst uses Old Moon Merchant (1.00M). Other materials from <a href="https://api.arsha.io" target="_blank" rel="noopener">api.arsha.io</a> (EU Central Market).<br>Click Refresh if prices fail to load.</p>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="compare-dialog" class="compare-dialog">
+    <div class="compare-modal">
+      <div class="compare-header">
+        <div>
+          <center><h2>Buy vs Craft</h2></center>
+          <p class="muted compare-hint">Finished item on Central Market vs est. craft cost</p>
+          <p id="compare-context" class="compare-context"></p>
+          <p id="compare-sync-status" class="compare-sync-status muted"></p>
+        </div>
+        <button type="button" id="compare-close" class="btn-icon" aria-label="Close">×</button>
+      </div>
+      <div id="compare-body"></div>
+    </div>
+  </dialog>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

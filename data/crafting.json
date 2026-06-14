@@ -1,0 +1,1016 @@
+{
+  "draughts": [
+    {
+      "name": "Fury Draught",
+      "marketId": 1389,
+      "elixirs": [
+        "Elixir of Frenzy",
+        "Elixir of Concentration",
+        "Elixir of Fury",
+        "Elixir of Destruction"
+      ],
+      "batch": {
+        "elixirsPerType": 30,
+        "catalyst": 10,
+        "output": 10
+      }
+    },
+    {
+      "name": "Adaptation Draught",
+      "marketId": 1391,
+      "elixirs": [
+        "Elixir of Life",
+        "Defense Elixir",
+        "Elixir of Endurance",
+        "Helix Elixir"
+      ],
+      "batch": {
+        "elixirsPerType": 30,
+        "catalyst": 10,
+        "output": 10
+      }
+    },
+    {
+      "name": "Potential Draught",
+      "marketId": 1393,
+      "elixirs": [
+        "Elixir of Wind",
+        "Elixir of Swiftness",
+        "Elixir of Spells",
+        "Elixir of Shock"
+      ],
+      "batch": {
+        "elixirsPerType": 30,
+        "catalyst": 10,
+        "output": 10
+      }
+    },
+    {
+      "name": "Corruption Draught",
+      "marketId": 1395,
+      "elixirs": [
+        "Elixir of Draining",
+        "Elixir of Perforation",
+        "Elixir of Death",
+        "Grim Reaper's Elixir"
+      ],
+      "batch": {
+        "elixirsPerType": 30,
+        "catalyst": 10,
+        "output": 10
+      }
+    },
+    {
+      "name": "Berserk Draught",
+      "marketId": 1397,
+      "elixirs": [
+        "Elixir of Assassination",
+        "Elixir of Detection",
+        "Elixir of Carnage",
+        "Elixir of Sky"
+      ],
+      "batch": {
+        "elixirsPerType": 30,
+        "catalyst": 10,
+        "output": 10
+      }
+    }
+  ],
+  "harmony": {
+    "name": "Harmony Draught",
+    "marketId": 1399,
+    "inputs": [
+      "Fury Draught",
+      "Adaptation Draught",
+      "Potential Draught",
+      "Corruption Draught",
+      "Berserk Draught"
+    ],
+    "amountEach": 10,
+    "output": 10
+  },
+  "catalyst": {
+    "name": "Spellbound Catalyst",
+    "marketId": 820936,
+    "vendorPrice": 1000000,
+    "priceSource": "Old Moon Merchant"
+  },
+  "blueUpgrade": {
+    "reagent": {
+      "name": "Blue Reagent",
+      "marketId": 4916,
+      "vendorPrice": 50000,
+      "priceSource": "Material Merchant"
+    },
+    "greensPerBlue": 3,
+    "reagentPerBlue": 1
+  },
+  "yields": {
+    "elixirAlchemy": {
+      "greenMin": 1,
+      "greenMax": 4,
+      "greenExpected": 2.5,
+      "blueMin": 1,
+      "blueMax": 2,
+      "blueExpectedPerCraft": 0.2
+    },
+    "harmonyBatch": {
+      "output": 10
+    },
+    "draughtBatch": {
+      "output": 10
+    }
+  },
+  "substitutions": {
+    "Bear Blood": {
+      "replaceWith": {
+        "name": "Lion Blood",
+        "marketId": 6223
+      }
+    }
+  },
+  "freeReagents": {
+    "Clear Liquid Reagent": {
+      "marketId": 5301,
+      "priceSource": "Free (Mysterious Catalyst exchange)"
+    }
+  },
+  "partyHarmonies": {
+    "willElixir": "Elixir of Will",
+    "perCraft": {
+      "harmony": 1,
+      "hunt": 3,
+      "will": 3,
+      "catalyst": 1
+    },
+    "variants": {
+      "human": {
+        "label": "Human",
+        "name": "[Party] Harmony Draught - Human",
+        "marketId": 1401,
+        "huntElixir": "Elixir of Human Hunt"
+      },
+      "edania": {
+        "label": "Edania",
+        "name": "[Party] Harmony Draught - Edania",
+        "marketId": 1407,
+        "huntElixir": "Elixir of Edania"
+      },
+      "demihuman": {
+        "label": "Demihuman",
+        "name": "[Party] Harmony Draught - Demihuman",
+        "marketId": 1403,
+        "huntElixir": "Elixir of Demihuman Hunt"
+      },
+      "kamasylvia": {
+        "label": "Kamasylvia",
+        "name": "[Party] Harmony Draught - Kamasylvia",
+        "marketId": 1405,
+        "huntElixir": "Griffon's Elixir"
+      }
+    }
+  },
+  "vendorPrices": {
+    "5402": {
+      "price": 575,
+      "source": "Herb Vendor"
+    },
+    "5403": {
+      "price": 550,
+      "source": "Herb Vendor"
+    },
+    "5407": {
+      "price": 900,
+      "source": "Mushroom Vendor"
+    },
+    "5408": {
+      "price": 1000,
+      "source": "Mushroom Vendor"
+    },
+    "5409": {
+      "price": 950,
+      "source": "Mushroom Vendor"
+    },
+    "5410": {
+      "price": 1000,
+      "source": "Mushroom Vendor"
+    },
+    "5411": {
+      "price": 950,
+      "source": "Mushroom Vendor"
+    },
+    "5412": {
+      "price": 950,
+      "source": "Mushroom Vendor"
+    },
+    "5413": {
+      "price": 900,
+      "source": "Mushroom Vendor"
+    },
+    "5414": {
+      "price": 1000,
+      "source": "Mushroom Vendor"
+    },
+    "5416": {
+      "price": 1000,
+      "source": "Mushroom Vendor"
+    },
+    "5417": {
+      "price": 925,
+      "source": "Mushroom Vendor"
+    },
+    "5418": {
+      "price": 1000,
+      "source": "Mushroom Vendor"
+    },
+    "5419": {
+      "price": 750,
+      "source": "Mushroom Vendor"
+    },
+    "5420": {
+      "price": 1050,
+      "source": "Mushroom Vendor"
+    },
+    "5439": {
+      "price": 2500,
+      "source": "Herb Vendor"
+    }
+  },
+  "elixirs": {
+    "Elixir of Frenzy": {
+      "codexId": 672,
+      "blueMarketId": 673,
+      "blueName": "Elixir of Endless Frenzy",
+      "materials": [
+        {
+          "name": "Oil of Regeneration",
+          "qty": 1,
+          "marketId": 6601
+        },
+        {
+          "name": "Clear Liquid Reagent",
+          "qty": 5,
+          "marketId": 5301
+        },
+        {
+          "name": "Ghost Mushroom",
+          "qty": 2,
+          "marketId": 5414
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 3,
+          "marketId": 5960
+        },
+        {
+          "name": "Cedar Sap",
+          "qty": 5,
+          "marketId": 5010
+        }
+      ],
+      "iconId": 609,
+      "blueIconId": 610
+    },
+    "Elixir of Concentration": {
+      "codexId": 700,
+      "blueMarketId": 701,
+      "blueName": "Elixir of Advanced Concentration",
+      "materials": [
+        {
+          "name": "Clear Liquid Reagent",
+          "qty": 1,
+          "marketId": 5301
+        },
+        {
+          "name": "Cloud Mushroom",
+          "qty": 3,
+          "marketId": 5410
+        },
+        {
+          "name": "Bear Blood",
+          "qty": 3,
+          "marketId": 6213
+        },
+        {
+          "name": "Wild Grass",
+          "qty": 2,
+          "marketId": 5439
+        }
+      ],
+      "iconId": 637,
+      "blueIconId": 638
+    },
+    "Elixir of Fury": {
+      "codexId": 704,
+      "blueMarketId": 705,
+      "blueName": "Elixir of Endless Fury",
+      "materials": [
+        {
+          "name": "Ash Sap",
+          "qty": 1,
+          "marketId": 5001
+        },
+        {
+          "name": "Dwarf Mushroom",
+          "qty": 4,
+          "marketId": 5409
+        },
+        {
+          "name": "Bear Blood",
+          "qty": 4,
+          "marketId": 6213
+        },
+        {
+          "name": "Purified Water",
+          "qty": 3,
+          "marketId": 6656
+        }
+      ],
+      "iconId": 641,
+      "blueIconId": 642
+    },
+    "Elixir of Destruction": {
+      "codexId": 1180,
+      "blueMarketId": 1181,
+      "blueName": "Elixir of Lethal Destruction",
+      "materials": [
+        {
+          "name": "Oil of Storms",
+          "qty": 1,
+          "marketId": 6602
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 3,
+          "marketId": 5960
+        },
+        {
+          "name": "Clear Liquid Reagent",
+          "qty": 5,
+          "marketId": 5301
+        },
+        {
+          "name": "Powder of Flame",
+          "qty": 5,
+          "marketId": 4802
+        },
+        {
+          "name": "Snowfield Cedar Sap",
+          "qty": 7,
+          "marketId": 5024
+        }
+      ],
+      "iconId": 1182,
+      "blueIconId": 1183
+    },
+    "Elixir of Life": {
+      "codexId": 708,
+      "blueMarketId": 709,
+      "blueName": "Elixir of Strong Life",
+      "materials": [
+        {
+          "name": "Pure Powder Reagent",
+          "qty": 1,
+          "marketId": 5302
+        },
+        {
+          "name": "HP Potion (Small)",
+          "qty": 3,
+          "marketId": 517
+        },
+        {
+          "name": "Silver Azalea",
+          "qty": 3,
+          "marketId": 5402
+        },
+        {
+          "name": "Fox Blood",
+          "qty": 5,
+          "marketId": 6203
+        }
+      ],
+      "iconId": 645,
+      "blueIconId": 646
+    },
+    "Defense Elixir": {
+      "codexId": 716,
+      "blueMarketId": 717,
+      "blueName": "Elixir of Steel Defense",
+      "materials": [
+        {
+          "name": "Clear Liquid Reagent",
+          "qty": 1,
+          "marketId": 5301
+        },
+        {
+          "name": "Ash Sap",
+          "qty": 6,
+          "marketId": 5001
+        },
+        {
+          "name": "Pig Blood",
+          "qty": 5,
+          "marketId": 6205
+        },
+        {
+          "name": "Purified Water",
+          "qty": 3,
+          "marketId": 6656
+        }
+      ],
+      "iconId": 653,
+      "blueIconId": 654
+    },
+    "Elixir of Endurance": {
+      "codexId": 722,
+      "blueMarketId": 723,
+      "blueName": "Elixir of Overwhelming Endurance",
+      "materials": [
+        {
+          "name": "Pure Powder Reagent",
+          "qty": 1,
+          "marketId": 5302
+        },
+        {
+          "name": "Birch Sap",
+          "qty": 5,
+          "marketId": 5004
+        },
+        {
+          "name": "Bear Blood",
+          "qty": 4,
+          "marketId": 6213
+        },
+        {
+          "name": "Dwarf Mushroom",
+          "qty": 2,
+          "marketId": 5409
+        }
+      ],
+      "iconId": 659,
+      "blueIconId": 660
+    },
+    "Helix Elixir": {
+      "codexId": 782,
+      "blueMarketId": 783,
+      "blueName": "Splendid Helix Elixir",
+      "materials": [
+        {
+          "name": "Thuja Sap",
+          "qty": 6,
+          "marketId": 5020
+        },
+        {
+          "name": "Monk's Branch",
+          "qty": 3,
+          "marketId": 5007
+        },
+        {
+          "name": "Clown's Blood",
+          "qty": 2,
+          "marketId": 6353
+        },
+        {
+          "name": "Powder of Flame",
+          "qty": 2,
+          "marketId": 4802
+        },
+        {
+          "name": "Purified Water",
+          "qty": 3,
+          "marketId": 6656
+        }
+      ],
+      "iconId": 784,
+      "blueIconId": 785
+    },
+    "Elixir of Wind": {
+      "codexId": 688,
+      "blueMarketId": 689,
+      "blueName": "Elixir of Flowing Wind",
+      "materials": [
+        {
+          "name": "Wise Man's Blood",
+          "qty": 1,
+          "marketId": 6355
+        },
+        {
+          "name": "Fortune Teller Mushroom",
+          "qty": 5,
+          "marketId": 5407
+        },
+        {
+          "name": "Powder of Darkness",
+          "qty": 2,
+          "marketId": 4801
+        },
+        {
+          "name": "Pine Sap",
+          "qty": 5,
+          "marketId": 5003
+        }
+      ],
+      "iconId": 625,
+      "blueIconId": 626
+    },
+    "Elixir of Swiftness": {
+      "codexId": 690,
+      "blueMarketId": 691,
+      "blueName": "Elixir of Intrepid Swiftness",
+      "materials": [
+        {
+          "name": "Legendary Beast's Blood",
+          "qty": 1,
+          "marketId": 6351
+        },
+        {
+          "name": "Arrow Mushroom",
+          "qty": 5,
+          "marketId": 5408
+        },
+        {
+          "name": "Powder of Darkness",
+          "qty": 2,
+          "marketId": 4801
+        },
+        {
+          "name": "Birch Sap",
+          "qty": 5,
+          "marketId": 5004
+        }
+      ],
+      "iconId": 627,
+      "blueIconId": 628
+    },
+    "Elixir of Spells": {
+      "codexId": 692,
+      "blueMarketId": 693,
+      "blueName": "Elixir of Agile Spells",
+      "materials": [
+        {
+          "name": "Tyrant's Blood",
+          "qty": 1,
+          "marketId": 6352
+        },
+        {
+          "name": "Fire Flake Flower",
+          "qty": 5,
+          "marketId": 5403
+        },
+        {
+          "name": "Powder of Darkness",
+          "qty": 2,
+          "marketId": 4801
+        },
+        {
+          "name": "Maple Sap",
+          "qty": 3,
+          "marketId": 5002
+        }
+      ],
+      "iconId": 629,
+      "blueIconId": 630
+    },
+    "Elixir of Shock": {
+      "codexId": 762,
+      "blueMarketId": 763,
+      "blueName": "Elixir of Strong Shock",
+      "materials": [
+        {
+          "name": "Clown's Blood",
+          "qty": 1,
+          "marketId": 6353
+        },
+        {
+          "name": "Tiger Mushroom",
+          "qty": 5,
+          "marketId": 5412
+        },
+        {
+          "name": "Powder of Time",
+          "qty": 3,
+          "marketId": 4805
+        },
+        {
+          "name": "Cedar Sap",
+          "qty": 7,
+          "marketId": 5010
+        }
+      ],
+      "iconId": 764,
+      "blueIconId": 765
+    },
+    "Elixir of Draining": {
+      "codexId": 676,
+      "blueMarketId": 677,
+      "blueName": "Elixir of Strong Draining",
+      "materials": [
+        {
+          "name": "Oil of Fortitude",
+          "qty": 1,
+          "marketId": 6603
+        },
+        {
+          "name": "Clear Liquid Reagent",
+          "qty": 4,
+          "marketId": 5301
+        },
+        {
+          "name": "Hump Mushroom",
+          "qty": 3,
+          "marketId": 5416
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 2,
+          "marketId": 5960
+        },
+        {
+          "name": "Birch Sap",
+          "qty": 4,
+          "marketId": 5004
+        }
+      ],
+      "iconId": 613,
+      "blueIconId": 614
+    },
+    "Elixir of Perforation": {
+      "codexId": 680,
+      "blueMarketId": 681,
+      "blueName": "Elixir of Brutal Perforation",
+      "materials": [
+        {
+          "name": "Oil of Corruption",
+          "qty": 1,
+          "marketId": 6604
+        },
+        {
+          "name": "Clear Liquid Reagent",
+          "qty": 4,
+          "marketId": 5301
+        },
+        {
+          "name": "Bluffer Mushroom",
+          "qty": 5,
+          "marketId": 5417
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 2,
+          "marketId": 5960
+        },
+        {
+          "name": "Pine Sap",
+          "qty": 5,
+          "marketId": 5003
+        }
+      ],
+      "iconId": 617,
+      "blueIconId": 618
+    },
+    "Elixir of Death": {
+      "codexId": 686,
+      "blueMarketId": 687,
+      "blueName": "Brutal Death Elixir",
+      "materials": [
+        {
+          "name": "Oil of Tranquility",
+          "qty": 1,
+          "marketId": 6605
+        },
+        {
+          "name": "Clear Liquid Reagent",
+          "qty": 6,
+          "marketId": 5301
+        },
+        {
+          "name": "Ancient Mushroom",
+          "qty": 2,
+          "marketId": 5418
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 2,
+          "marketId": 5960
+        },
+        {
+          "name": "Ash Sap",
+          "qty": 7,
+          "marketId": 5001
+        }
+      ],
+      "iconId": 623,
+      "blueIconId": 624
+    },
+    "Grim Reaper's Elixir": {
+      "codexId": 712,
+      "blueMarketId": 713,
+      "blueName": "Grim Soul Reaper's Elixir",
+      "materials": [
+        {
+          "name": "Oil of Fortitude",
+          "qty": 1,
+          "marketId": 6603
+        },
+        {
+          "name": "Pure Powder Reagent",
+          "qty": 4,
+          "marketId": 5302
+        },
+        {
+          "name": "Sky Mushroom",
+          "qty": 2,
+          "marketId": 5411
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 4,
+          "marketId": 5960
+        },
+        {
+          "name": "Monk's Branch",
+          "qty": 2,
+          "marketId": 5007
+        }
+      ],
+      "iconId": 649,
+      "blueIconId": 650
+    },
+    "Elixir of Assassination": {
+      "codexId": 696,
+      "blueMarketId": 697,
+      "blueName": "Elixir of Lethal Assassin",
+      "materials": [
+        {
+          "name": "Oil of Regeneration",
+          "qty": 1,
+          "marketId": 6601
+        },
+        {
+          "name": "Pure Powder Reagent",
+          "qty": 5,
+          "marketId": 5302
+        },
+        {
+          "name": "Amanita Mushroom",
+          "qty": 4,
+          "marketId": 5419
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 2,
+          "marketId": 5960
+        },
+        {
+          "name": "Red Tree Lump",
+          "qty": 2,
+          "marketId": 5011
+        }
+      ],
+      "iconId": 633,
+      "blueIconId": 634
+    },
+    "Elixir of Detection": {
+      "codexId": 698,
+      "blueMarketId": 699,
+      "blueName": "Elixir of Sharp Detection",
+      "materials": [
+        {
+          "name": "Oil of Storms",
+          "qty": 1,
+          "marketId": 6602
+        },
+        {
+          "name": "Pure Powder Reagent",
+          "qty": 6,
+          "marketId": 5302
+        },
+        {
+          "name": "Truffle Mushroom",
+          "qty": 3,
+          "marketId": 5420
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 3,
+          "marketId": 5960
+        },
+        {
+          "name": "Old Tree Bark",
+          "qty": 2,
+          "marketId": 5008
+        }
+      ],
+      "iconId": 635,
+      "blueIconId": 636
+    },
+    "Elixir of Carnage": {
+      "codexId": 718,
+      "blueMarketId": 719,
+      "blueName": "Elixir of Brutal Carnage",
+      "materials": [
+        {
+          "name": "Oil of Corruption",
+          "qty": 1,
+          "marketId": 6604
+        },
+        {
+          "name": "Pure Powder Reagent",
+          "qty": 7,
+          "marketId": 5302
+        },
+        {
+          "name": "Tiger Mushroom",
+          "qty": 2,
+          "marketId": 5412
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 3,
+          "marketId": 5960
+        },
+        {
+          "name": "Spirit's Leaf",
+          "qty": 2,
+          "marketId": 5006
+        }
+      ],
+      "iconId": 655,
+      "blueIconId": 656
+    },
+    "Elixir of Sky": {
+      "codexId": 720,
+      "blueMarketId": 721,
+      "blueName": "Merciless Sky Elixir",
+      "materials": [
+        {
+          "name": "Oil of Tranquility",
+          "qty": 1,
+          "marketId": 6605
+        },
+        {
+          "name": "Pure Powder Reagent",
+          "qty": 6,
+          "marketId": 5302
+        },
+        {
+          "name": "Emperor Mushroom",
+          "qty": 1,
+          "marketId": 5413
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 4,
+          "marketId": 5960
+        },
+        {
+          "name": "Bloody Tree Knot",
+          "qty": 2,
+          "marketId": 5005
+        }
+      ],
+      "iconId": 657,
+      "blueIconId": 658
+    },
+    "Elixir of Human Hunt": {
+      "codexId": 670,
+      "materials": [
+        {
+          "name": "Clown's Blood",
+          "qty": 1,
+          "marketId": 6353
+        },
+        {
+          "name": "Fortune Teller Mushroom",
+          "qty": 4,
+          "marketId": 5407
+        },
+        {
+          "name": "Black Stone Powder",
+          "qty": 3,
+          "marketId": 4901
+        },
+        {
+          "name": "Maple Sap",
+          "qty": 4,
+          "marketId": 5002
+        }
+      ],
+      "iconId": 607
+    },
+    "Elixir of Demihuman Hunt": {
+      "codexId": 678,
+      "materials": [
+        {
+          "name": "Sinner's Blood",
+          "qty": 1,
+          "marketId": 6354
+        },
+        {
+          "name": "Arrow Mushroom",
+          "qty": 4,
+          "marketId": 5408
+        },
+        {
+          "name": "Black Stone Powder",
+          "qty": 3,
+          "marketId": 4901
+        },
+        {
+          "name": "Fir Sap",
+          "qty": 4,
+          "marketId": 5009
+        }
+      ],
+      "iconId": 615
+    },
+    "Elixir of Edania": {
+      "codexId": 1409,
+      "materials": [
+        {
+          "name": "Sinner's Blood",
+          "qty": 2,
+          "marketId": 6354
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 4,
+          "marketId": 5960
+        },
+        {
+          "name": "Old Tree Bark",
+          "qty": 5,
+          "marketId": 5008
+        },
+        {
+          "name": "Clear Liquid Reagent",
+          "qty": 5,
+          "marketId": 5301
+        },
+        {
+          "name": "Caphras Tree Sap",
+          "qty": 6,
+          "marketId": 5025
+        }
+      ],
+      "iconId": 1409
+    },
+    "Elixir of Will": {
+      "codexId": 702,
+      "materials": [
+        {
+          "name": "Pure Powder Reagent",
+          "qty": 1,
+          "marketId": 5302
+        },
+        {
+          "name": "Wolf Blood",
+          "qty": 6,
+          "marketId": 6214
+        },
+        {
+          "name": "Sunrise Herb",
+          "qty": 4,
+          "marketId": 5401
+        },
+        {
+          "name": "Purified Water",
+          "qty": 3,
+          "marketId": 6656
+        }
+      ],
+      "iconId": 639
+    },
+    "Griffon's Elixir": {
+      "codexId": 740,
+      "materials": [
+        {
+          "name": "Griffon Claw",
+          "qty": 1,
+          "marketId": 9741
+        },
+        {
+          "name": "Cedar Sap",
+          "qty": 6,
+          "marketId": 5010
+        },
+        {
+          "name": "Trace of Nature",
+          "qty": 3,
+          "marketId": 5960
+        },
+        {
+          "name": "Purified Water",
+          "qty": 3,
+          "marketId": 6656
+        },
+        {
+          "name": "Sinner's Blood",
+          "qty": 2,
+          "marketId": 6354
+        }
+      ],
+      "iconId": 744
+    }
+  }
+}
