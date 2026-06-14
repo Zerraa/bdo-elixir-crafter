@@ -454,6 +454,22 @@ a:hover {
   margin-top: 2px;
 }
 
+.subst-prefs {
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+
+.subst-prefs > summary {
+  cursor: pointer;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.subst-prefs .checkbox-row {
+  margin-top: 6px;
+  margin-left: 4px;
+}
+
 .presets {
   display: flex;
   flex-wrap: wrap;
@@ -794,6 +810,27 @@ a:hover {
 
 .alchemy-setup .section-label {
   margin-top: 0;
+}
+
+.alchemy-setup .section-label:not(:first-child) {
+  margin-top: 14px;
+}
+
+.precraft-step {
+  margin-top: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  background: var(--surface);
+}
+
+.precraft-step summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.precraft-step .alchemy-slots {
+  margin-top: 8px;
 }
 
 .alchemy-setup-hint {

@@ -123,9 +123,52 @@
   },
   "substitutions": {
     "Bear Blood": {
+      "pref": "useLionForBear",
       "replaceWith": {
         "name": "Lion Blood",
         "marketId": 6223
+      }
+    },
+    "Wild Grass": {
+      "pref": "useWeedsForWildGrass",
+      "replaceWith": {
+        "name": "Weeds",
+        "marketId": 5600
+      }
+    },
+    "Salt": {
+      "pref": "useSunDriedSalt",
+      "replaceWith": {
+        "name": "Sun-dried Salt",
+        "marketId": 9003
+      }
+    },
+    "Pig Blood": {
+      "pref": "useDeerForPig",
+      "replaceWith": {
+        "name": "Deer Blood",
+        "marketId": 6202
+      }
+    },
+    "Wolf Blood": {
+      "pref": "useRhinoForWolf",
+      "replaceWith": {
+        "name": "Rhino Blood",
+        "marketId": 6204
+      }
+    },
+    "Fox Blood": {
+      "pref": "useScorpionForFox",
+      "replaceWith": {
+        "name": "Scorpion Blood",
+        "marketId": 6224
+      }
+    },
+    "Red Tree Lump": {
+      "pref": "useEverlastingHerbForRedTreeLump",
+      "replaceWith": {
+        "name": "Everlasting Herb",
+        "marketId": 5406
       }
     }
   },
@@ -231,9 +274,21 @@
       "price": 1050,
       "source": "Mushroom Vendor"
     },
-    "5439": {
-      "price": 2500,
-      "source": "Herb Vendor"
+    "9001": {
+      "price": 20,
+      "source": "Food Vendor"
+    },
+    "9002": {
+      "price": 20,
+      "source": "Food Vendor"
+    },
+    "517": {
+      "price": 51,
+      "source": "Material Vendor"
+    },
+    "16101": {
+      "price": 50,
+      "source": "Material Vendor"
     }
   },
   "elixirs": {

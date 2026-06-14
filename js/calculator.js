@@ -1,3 +1,5 @@
+import { expandIntermediates, getPrecraftSteps } from "./expand.js";
+
 export function getYields(data, greenExpectedOverride) {
   const y = data.yields?.elixirAlchemy ?? {};
   return {
@@ -51,14 +53,21 @@ export function aggregateMaterialsFromCrafts(craftCounts, elixirsData) {
   return [...materials.values()].sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export function applySubstitutions(materials, data, { useLionForBear = true } = {}) {
-  if (!useLionForBear || !data.substitutions) return materials;
+export function shouldApplySubstitution(sub, prefs = {}) {
+  if (!sub?.replaceWith) return false;
+  if (!sub.pref) return true;
+  return Boolean(prefs[sub.pref]);
+}
+
+export function applySubstitutions(materials, data, prefs = {}) {
+  if (!data?.substitutions) return materials;
 
   const byId = new Map();
 
   for (const mat of materials) {
     const sub = data.substitutions[mat.name];
-    const target = sub?.replaceWith ?? mat;
+    const target =
+      sub && shouldApplySubstitution(sub, prefs) ? sub.replaceWith : mat;
     const key = target.marketId;
     const existing = byId.get(key) || {
       name: target.name,
@@ -66,7 +75,9 @@ export function applySubstitutions(materials, data, { useLionForBear = true } = 
       qty: 0,
     };
     existing.qty += mat.qty;
-    if (sub) existing.substitutedFrom = mat.name;
+    if (sub && shouldApplySubstitution(sub, prefs)) {
+      existing.substitutedFrom = mat.name;
+    }
     byId.set(key, existing);
   }
 
@@ -86,15 +97,37 @@ export function applyVendorPrices(materials, data) {
   });
 }
 
+function recipeWithSubstitutions(materials, data, prefs) {
+  if (!materials || !data?.substitutions) return materials || [];
+  return materials.map((m) => {
+    const sub = data.substitutions[m.name];
+    if (!shouldApplySubstitution(sub, prefs)) return m;
+    return {
+      ...m,
+      name: sub.replaceWith.name,
+      marketId: sub.replaceWith.marketId,
+    };
+  });
+}
+
 export function applyPricePrefs(materials, data, prefs = {}) {
   if (!prefs.ignoreClearReagent || !data?.freeReagents) return materials;
   const free = data.freeReagents["Clear Liquid Reagent"];
   if (!free?.marketId) return materials;
-  return materials.map((mat) =>
-    mat.marketId === free.marketId
-      ? { ...mat, priceSource: free.priceSource }
-      : mat
-  );
+  return materials
+    .filter((mat) => mat.marketId !== free.marketId)
+    .map((mat) => mat);
+}
+
+function finalizeElixirMaterials(rawMaterials, data, prefs) {
+  let materials = rawMaterials;
+  if (prefs.craftIntermediates !== false) {
+    materials = expandIntermediates(materials, data, prefs);
+  }
+  materials = applySubstitutions(materials, data, prefs);
+  materials = applyVendorPrices(materials, data);
+  materials = applyPricePrefs(materials, data, prefs);
+  return materials;
 }
 
 export function calcElixirsOnly(elixirName, crafts, data, prefs = {}) {
@@ -104,26 +137,19 @@ export function calcElixirsOnly(elixirName, crafts, data, prefs = {}) {
   const craftCount = Math.max(0, Math.floor(crafts) || 0);
   const yields = getYields(data);
 
+  const rawMaterials = aggregateMaterialsFromCrafts(
+    { [elixirName]: craftCount },
+    data.elixirs
+  );
+  const recipeForGuide = recipeWithSubstitutions(recipe.materials, data, prefs);
+
   return {
     mode: "elixirs",
     elixirName,
     crafts: craftCount,
     recipePerCraft: recipe.materials,
-    materials: applyPricePrefs(
-      applyVendorPrices(
-        applySubstitutions(
-          aggregateMaterialsFromCrafts(
-            { [elixirName]: craftCount },
-            data.elixirs
-          ),
-          data,
-          prefs
-        ),
-        data
-      ),
-      data,
-      prefs
-    ),
+    materials: finalizeElixirMaterials(rawMaterials, data, prefs),
+    precraftSteps: getPrecraftSteps(recipeForGuide, data, prefs),
     elixirMarketItems: [],
     expectedOutput: {
       greens: calcExpectedGreenOutput(craftCount, yields),
@@ -237,6 +263,14 @@ export function calcFullChain(harmonyCrafts, gradeMode, data, prefs = {}) {
           gradeMode === "blue"
             ? blueUpgradeRecipePerCraft(name, data)
             : recipe.materials,
+        precraftSteps:
+          gradeMode === "blue"
+            ? []
+            : getPrecraftSteps(
+                recipeWithSubstitutions(recipe.materials, data, prefs),
+                data,
+                prefs
+              ),
       };
     }),
   }));
@@ -266,15 +300,8 @@ export function calcFullChain(harmonyCrafts, gradeMode, data, prefs = {}) {
   };
 
   if (gradeMode === "green") {
-    result.materials = applyPricePrefs(
-      applyVendorPrices(
-        applySubstitutions(
-          aggregateMaterialsFromCrafts(alchemyCraftsPerElixir, data.elixirs),
-          data,
-          prefs
-        ),
-        data
-      ),
+    result.materials = finalizeElixirMaterials(
+      aggregateMaterialsFromCrafts(alchemyCraftsPerElixir, data.elixirs),
       data,
       prefs
     );
@@ -294,15 +321,8 @@ export function calcFullChain(harmonyCrafts, gradeMode, data, prefs = {}) {
       greenCraftsPerElixir[name] = alchemyCraftsPerElixir[name];
     }
 
-    result.materials = applyPricePrefs(
-      applyVendorPrices(
-        applySubstitutions(
-          aggregateMaterialsFromCrafts(greenCraftsPerElixir, data.elixirs),
-          data,
-          prefs
-        ),
-        data
-      ),
+    result.materials = finalizeElixirMaterials(
+      aggregateMaterialsFromCrafts(greenCraftsPerElixir, data.elixirs),
       data,
       prefs
     );

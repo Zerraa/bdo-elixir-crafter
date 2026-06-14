@@ -11,6 +11,13 @@ const DEFAULTS = {
   partyCount: 10,
   useLionForBear: true,
   ignoreClearReagent: true,
+  craftIntermediates: true,
+  useWeedsForWildGrass: false,
+  useSunDriedSalt: false,
+  useDeerForPig: false,
+  useRhinoForWolf: false,
+  useScorpionForFox: false,
+  useEverlastingHerbForRedTreeLump: false,
   sortBy: "cost",
 };
 
@@ -48,6 +55,23 @@ export function loadSession(craftingData = null) {
     next.partyCount = clampCount(next.partyCount, DEFAULTS.partyCount);
     next.useLionForBear = Boolean(next.useLionForBear);
     next.ignoreClearReagent = Boolean(next.ignoreClearReagent);
+    if (next.craftIntermediates === undefined) {
+      next.craftIntermediates = DEFAULTS.craftIntermediates;
+    } else {
+      next.craftIntermediates = Boolean(next.craftIntermediates);
+    }
+    if (next.useWeedsForWildGrass === undefined) {
+      next.useWeedsForWildGrass = DEFAULTS.useWeedsForWildGrass;
+    } else {
+      next.useWeedsForWildGrass = Boolean(next.useWeedsForWildGrass);
+    }
+    next.useSunDriedSalt = Boolean(next.useSunDriedSalt ?? DEFAULTS.useSunDriedSalt);
+    next.useDeerForPig = Boolean(next.useDeerForPig ?? DEFAULTS.useDeerForPig);
+    next.useRhinoForWolf = Boolean(next.useRhinoForWolf ?? DEFAULTS.useRhinoForWolf);
+    next.useScorpionForFox = Boolean(next.useScorpionForFox ?? DEFAULTS.useScorpionForFox);
+    next.useEverlastingHerbForRedTreeLump = Boolean(
+      next.useEverlastingHerbForRedTreeLump ?? DEFAULTS.useEverlastingHerbForRedTreeLump
+    );
 
     if (!["cost", "name", "qty"].includes(next.sortBy)) {
       next.sortBy = DEFAULTS.sortBy;
@@ -74,6 +98,13 @@ export function saveSession(state) {
         partyCount: state.partyCount,
         useLionForBear: state.useLionForBear,
         ignoreClearReagent: state.ignoreClearReagent,
+        craftIntermediates: state.craftIntermediates,
+        useWeedsForWildGrass: state.useWeedsForWildGrass,
+        useSunDriedSalt: state.useSunDriedSalt,
+        useDeerForPig: state.useDeerForPig,
+        useRhinoForWolf: state.useRhinoForWolf,
+        useScorpionForFox: state.useScorpionForFox,
+        useEverlastingHerbForRedTreeLump: state.useEverlastingHerbForRedTreeLump,
         sortBy: state.sortBy,
       })
     );

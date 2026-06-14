@@ -45,8 +45,7 @@
     "5417": { "price": 925, "source": "Mushroom Vendor" },
     "5418": { "price": 1000, "source": "Mushroom Vendor" },
     "5419": { "price": 750, "source": "Mushroom Vendor" },
-    "5420": { "price": 1050, "source": "Mushroom Vendor" },
-    "5439": { "price": 2500, "source": "Herb Vendor" }
+    "5420": { "price": 1050, "source": "Mushroom Vendor" }
   },
   "draughts": {
     "Fury Draught": 1389,
@@ -65,6 +64,7 @@
     "Bear Blood": 6213,
     "Lion Blood": 6223,
     "Wild Grass": 5439,
+    "Weeds": 5600,
     "Ash Sap": 5001,
     "Dwarf Mushroom": 5409,
     "Purified Water": 6656,
@@ -75,7 +75,13 @@
     "HP Potion (Small)": 517,
     "Silver Azalea": 5402,
     "Fox Blood": 6203,
+    "Lizard Blood": 6208,
     "Pig Blood": 6205,
+    "Deer Blood": 6202,
+    "Rhino Blood": 6204,
+    "Scorpion Blood": 6224,
+    "Yak Blood": 6225,
+    "Sun-dried Salt": 9003,
     "Birch Sap": 5004,
     "Thuja Sap": 5020,
     "Monk's Branch": 5007,
@@ -110,7 +116,15 @@
     "Caphras Tree Sap": 5025,
     "Sunrise Herb": 5401,
     "Wolf Blood": 6214,
-    "Sinner's Blood": 6354
+    "Sinner's Blood": 6354,
+    "Fruit of Nature": 5205,
+    "Powder of Rifts": 4803,
+    "Powder of Earth": 4804,
+    "Everlasting Herb": 5406,
+    "Bottle of River Water": 6653,
+    "Sugar": 9002,
+    "Salt": 9001,
+    "Empty Bottle": 16101
   },
   "elixirsGreen": {
     "Elixir of Frenzy": 672,

@@ -1,25 +1,33 @@
 # BDO Elixir Calculator
 
-A standalone calculator for Black Desert Online elixir crafting. Plan materials and silver cost for:
+A browser-based calculator for **Black Desert Online** elixir and harmony crafting. Plan materials, compare buy vs craft costs, and estimate silver spend using **EU Central Market** prices.
 
-- **Elixirs** — set how many **alchemy crafts** to do for one elixir
-- **Harmony Draughts** — set how many **harmony crafts** to do (10 Harmony Draughts per craft)
-- **Party Harmonies** — craft Human, Edania, Demihuman, or Kamasylvia party draughts (harmonies assumed ready)
+No build step — static HTML, CSS, and JavaScript (ES modules).
 
-Live EU Central Market prices are fetched from [api.arsha.io](https://api.arsha.io). Item icons load from [BDO Codex](https://bdocodex.com).
+## Features
 
-## Quick start
+- **Three craft modes** — single elixirs, Harmony Draughts, and party monster-type harmonies (Human, Edania, Demihuman, Kamasylvia)
+- **Live EU market prices** from [Arsha.io](https://api.arsha.io), with bundled cache and fallback for GitHub Pages
+- **Intermediate expansion** — roll oils, reagents, and purified water up into raw materials, with precraft recipes in the sidebar
+- **Material substitutions** — optional toggles for valid in-game swaps (Lion/Bear blood, Weeds/Wild Grass, and more)
+- **Buy vs Craft** — compare buying finished items on the CM against estimated craft cost
+- **Session restore** — mode, counts, and preferences saved in `localStorage`
 
-This app uses ES modules and fetches JSON/API data, so it must be served over HTTP (opening `index.html` directly from disk will not work).
+Item icons from [BDO Codex](https://bdocodex.com).
+
+## Getting started
+
+The app loads JSON and fetches prices over the network, so it must be served over HTTP — opening `index.html` directly from disk will not work.
 
 ```bash
+git clone https://github.com/YOUR_USER/BDO_Elixir.git
 cd BDO_Elixir
 npx --yes serve .
 ```
 
-Then open `http://localhost:3000` (or the port shown).
+Open the URL shown (usually `http://localhost:3000`).
 
-Alternatively:
+Or with Python:
 
 ```bash
 python -m http.server 8080
@@ -27,120 +35,102 @@ python -m http.server 8080
 
 ## Usage
 
-1. Choose **Elixirs**, **Harmony**, or **Party** in the sidebar.
-2. Enter **craft counts** (not final item totals).
-3. Review **Materials to gather** (elixirs), **Breakdown** (harmony/party), and the **Shopping list**.
-4. Click **Refresh** to force-update market prices (cached 15 minutes by default).
-5. Click **Buy vs Craft** to compare buying finished items on the Central Market vs the est. craft cost shown in the stats bar.
+1. Pick a mode in the sidebar: **Elixirs**, **Harmony**, or **Monster-Type Harmony**.
+2. Enter your **craft count** (see [Input counts](#input-counts) below).
+3. Review materials, precraft steps, and the shopping list.
+4. Use **Refresh** to force-update market prices (15-minute cache by default).
+5. Use **Buy vs Craft** to compare CM purchase cost against craft cost.
 
-Your last mode, craft counts, elixir selection, party variant, and shopping preferences are saved in the browser (`localStorage`) and restored when you reopen the page.
+### Input counts
 
-### Buy vs Craft
+| Mode | You enter | What you get |
+| --- | --- | --- |
+| Elixirs | Alchemy crafts | ~1–4 greens per craft (avg ~2.5); rare blue procs (~20%) |
+| Harmony | Harmony crafts | 10 Harmony Draughts per craft |
+| Party | Party draught count | 1 party draught per craft |
 
-| Mode | Buy side | Craft side |
-|------|----------|------------|
-| **Elixirs** | Expected green elixirs × CM price | Raw material cost (same as Est. cost) |
-| **Harmony** | Harmony Draughts × CM price | Catalyst only (same as Est. cost — assumes elixirs ready) |
-| **Party** | Party draught × CM price | Catalyst only (same as Est. cost — assumes elixirs ready) |
+### Craft modes
+
+**Elixirs** — Full material breakdown for one elixir type. Shopping list includes raw inputs (or intermediates if expansion is off).
+
+**Harmony Draughts** — Plans catalyst cost for harmony crafting. Assumes you already have the required elixirs; breakdown shows what each harmony needs.
+
+**Party harmonies** — Each craft uses 1 Harmony Draught, 3 hunt elixirs, 3 Elixir of Will, and 1 Spellbound Catalyst. Hunt/will elixirs appear in the breakdown but are not added to shopping cost (same as harmony mode).
 
 ### Shopping preferences
 
-- **Use Lion Blood instead of Bear Blood** — prices Lion Blood on the market instead of Bear Blood (valid in-game substitute).
-- **Ignore Clear Liquid Reagent cost** — treats Clear Liquid Reagent as free via Mysterious Catalyst exchange (marketId 5301). Default off.
+| Option | Default | Effect |
+| --- | --- | --- |
+| Use Lion Blood instead of Bear Blood | On | Prices Lion Blood on CM |
+| Ignore Clear Liquid Reagent cost | On | Treats reagent as free (Mysterious Catalyst exchange) |
+| Craft intermediates myself | On | Expands oils/reagents/water into leaf materials |
+| Use Weeds instead of Wild Grass | Off | Prices Weeds instead of Wild Grass |
+| More material substitutes | Off | Sun-dried Salt, alternate bloods, Everlasting Herb for Red Tree Lump |
 
-### Blue elixir upgrade (harmony)
+Precraft steps list additional valid substitutes (e.g. other blood groups) even when no pricing toggle exists.
 
-When **Use Blue Elixirs** is selected, blues are upgraded via Simple Alchemy: **3× green elixir + 1× Blue Reagent** (50,000 silver from Material Merchant). The breakdown shows this recipe — not the green raw-material alchemy table.
+### Buy vs Craft
 
-### Shopping lists by mode
+| Mode | Buy | Craft |
+| --- | --- | --- |
+| Elixirs | Expected greens × CM price | Raw material cost |
+| Harmony | Harmony Draughts × CM price | Catalyst only (elixirs assumed ready) |
+| Party | Party draught × CM price | Catalyst only (elixirs assumed ready) |
 
-| Mode | Shopping list |
-|------|----------------|
-| **Elixirs** | Raw materials for your craft count — mushrooms/herbs at NPC vendor prices, everything else on EU market |
-| **Harmony Draughts** | Spellbound Catalyst only — assumes you already crafted elixirs (1.00M silver each from Old Moon Merchant) |
-| **Party Harmonies** | Spellbound Catalyst only — assumes harmonies and hunt/will elixirs already crafted |
+### Blue elixirs
 
-Per-craft alchemy slot amounts live in the sidebar (elixirs mode). Gather totals are in the left panel; prices and grand total are on the right.
+Harmony mode can target **green** or **blue** draughts. Blues are upgraded via Simple Alchemy: **3× green + 1× Blue Reagent** (50k from Material Merchant). Blue elixirs have different names from their green versions (e.g. Elixir of Fury → Elixir of Endless Fury).
 
-**Vendor-priced materials:** Mushrooms (Mushroom Vendor, Calpheon) and herbs (Herb Vendor) use fixed NPC buy prices from BDO Codex. Spellbound Catalyst uses Old Moon Merchant. Saps, bloods, reagents, and oils use live EU Central Market prices.
+## Pricing
 
-If market prices show as missing, click **Refresh** — the API can rate-limit parallel requests.
+- **Central Market** — saps, bloods, oils, reagents, gatherables (Wild Grass, Weeds, powders, etc.)
+- **NPC vendors** — mushrooms (Calpheon Mushroom Vendor), select herbs, Sugar, Salt, HP potions
+- **Fixed merchants** — Spellbound Catalyst (Old Moon Merchant, 1M), Blue Reagent (Material Merchant, 50k)
 
-### Party Harmonies
+If prices fail to load (API rate limits, Imperva on Pages), click **Refresh**. A bundled `data/price-cache.json` provides fallback values for deployment.
 
-Each party craft consumes **1 Harmony Draught**, **3 hunt elixirs**, **3 Elixir of Will**, and **1 Spellbound Catalyst** → **1 party draught**.
+To refresh the cache locally when the API is reachable:
 
-| Variant | Output |
-|---------|--------|
-| Human | [Party] Harmony Draught - Human |
-| Edania | [Party] Harmony Draught - Edania |
-| Demihuman | [Party] Harmony Draught - Demihuman |
-| Kamasylvia | [Party] Harmony Draught - Kamasylvia (Griffon's Elixir) |
+```bash
+node scripts/update-price-cache.mjs
+```
 
-Harmonies and hunt/will elixirs are shown in the breakdown but excluded from shopping cost (same pattern as harmony mode excluding elixirs).
+## Deploy to GitHub Pages
 
-### Input semantics
+1. Push this repo to GitHub.
+2. **Settings → Pages → Build and deployment**
+3. Source: **Deploy from a branch**, branch `main`, folder **/ (root)**
 
-| Mode | Input | Output |
-|------|-------|--------|
-| Harmony Draughts | Harmony **crafts** | Harmonies = crafts × 10 |
-| Elixirs | Alchemy **crafts** | Greens 1–4/craft (~2.5 avg) + rare blue procs (~20%) |
-| Party | Party draught **count** | 1 draught per craft |
+The site works as a static site; no build command required.
 
-### Alchemy yields
+## Project structure
 
-Each elixir alchemy craft uses **one set of recipe materials** but yields:
-
-- **Green:** 1–4 per craft (elixirs mode shows min–max and average for your craft count)
-- **Blue:** rare proc (~20% of crafts, 1–2 when it occurs) — shown alongside greens, not as a separate grade choice
-
-Example at default rates: **1,500 crafts** → ~**3,750** greens and ~**300** blues.
-
-Harmony Draughts plans alchemy crafts pessimistically in the breakdown: **one craft per green elixir needed** (assumes 1 green per craft). Shopping cost is **catalyst only**, priced at **1,000,000 silver** per catalyst from the **Old Moon Merchant** (not on Central Market).
-
-Blue elixirs have **different names** from greens (e.g. Elixir of Fury → Elixir of Endless Fury). The harmony breakdown uses blue names when **Blue only** draughts are selected.
-
-### Craft math (per harmony produced)
-
-| Item | Amount |
-|------|--------|
-| Each of 20 elixirs | 3 green or 1 blue |
-| Each draught type | 1 draught |
-| Spellbound Catalyst | 5 |
-
-Harmony Simple Alchemy: **10 crafts** → **100** Harmony Draughts → **100 of each** draught type → **300 green** or **100 blue** per elixir.
-
-Draught craft accepts **green only** or **blue only** elixirs (1 blue = 3 green substitution).
-
-## GitHub Pages
-
-Push the repo and enable Pages with source **Deploy from branch** → `main` → `/ (root)`.
+```
+index.html              App shell
+css/styles.css          Layout and theme
+js/
+  app.js                UI wiring and price refresh
+  calculator.js         Craft math and material aggregation
+  expand.js             Intermediate recipe expansion
+  prices.js             EU price fetch, cache, vendor overrides
+  render.js             DOM rendering
+  session.js            localStorage persistence
+  icons.js              BDO Codex icon URLs
+data/
+  crafting.json         Elixir recipes, draught groups, party harmonies
+  intermediates.json    Oil, reagent, and water sub-recipes
+  marketIds.json        Item ID reference
+  price-cache.json      Bundled EU price fallback
+scripts/
+  update-price-cache.mjs  Regenerate price-cache.json
+```
 
 ## Data sources
 
 - Recipes and item IDs: [BDO Codex](https://bdocodex.com/us/)
-- Market prices: [Arsha.io](https://api.arsha.io) (unofficial EU market wrapper)
-- Item icons: BDO Codex CDN (`bdocodex.com/items/new_icon/...`)
-
-Prices may be missing for items not listed on the Central Market (e.g. some gatherables). Material quantities are always per craft.
-
-## Project layout
-
-```
-index.html          Calculator UI
-css/styles.css      Dark theme layout
-  js/
-  app.js            Input wiring + session restore
-  session.js        localStorage save/load
-  calculator.js     Crafting math
-  prices.js         EU price fetch + cache
-  render.js         DOM rendering
-  icons.js          BDO Codex icon URLs
-data/
-  crafting.json     Draught groups + elixir recipes + party harmonies
-  marketIds.json    Item ID reference
-```
+- Market prices: [Arsha.io](https://api.arsha.io) (primary), [Black Desert Market API](https://api.blackdesertmarket.com) (fallback)
+- Icons: BDO Codex CDN
 
 ## Disclaimer
 
-Unofficial fan tool. Not affiliated with Pearl Abyss. Market data is cached third-party API output — verify prices in-game before large purchases.
+Unofficial fan tool. Not affiliated with Pearl Abyss. Market data comes from third-party APIs and may be stale or incomplete — verify prices in-game before large purchases.

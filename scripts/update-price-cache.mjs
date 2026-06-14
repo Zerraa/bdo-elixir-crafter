@@ -42,6 +42,20 @@ function collectMarketIds(crafting, marketIds) {
     for (const mat of variant.materials || []) add(mat.marketId);
   }
 
+  let intermediates = {};
+  try {
+    intermediates = JSON.parse(
+      fs.readFileSync(path.join(ROOT, "data/intermediates.json"), "utf8")
+    );
+  } catch {
+    /* optional file */
+  }
+  for (const entry of Object.values(intermediates)) {
+    add(entry.marketId);
+    for (const mat of entry.materials || []) add(mat.marketId);
+    for (const alt of entry.alternatives || []) add(alt.or?.marketId);
+  }
+
   return [...ids].sort((a, b) => a - b);
 }
 

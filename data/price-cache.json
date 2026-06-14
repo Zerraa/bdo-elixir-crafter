@@ -1,22 +1,87 @@
 {
   "region": "eu",
   "source": "api.blackdesertmarket.com",
-  "updatedAt": "2026-06-14T15:35:14.340Z",
+  "updatedAt": "2026-06-14T16:00:17.824Z",
   "prices": {
+    "517": {
+      "id": 517,
+      "name": "HP Potion (Small)",
+      "basePrice": 52
+    },
+    "670": {
+      "id": 670,
+      "name": "Elixir of Human Hunt",
+      "basePrice": 36800
+    },
+    "672": {
+      "id": 672,
+      "name": "Elixir of Frenzy",
+      "basePrice": 278000
+    },
+    "673": {
+      "id": 673,
+      "name": "Elixir of Endless Frenzy",
+      "basePrice": 780000
+    },
+    "676": {
+      "id": 676,
+      "name": "Elixir of Draining",
+      "basePrice": 205000
+    },
+    "677": {
+      "id": 677,
+      "name": "Elixir of Strong Draining",
+      "basePrice": 550000
+    },
+    "678": {
+      "id": 678,
+      "name": "Elixir of Demihuman Hunt",
+      "basePrice": 31000
+    },
+    "680": {
+      "id": 680,
+      "name": "Elixir of Perforation",
+      "basePrice": 213000
+    },
+    "681": {
+      "id": 681,
+      "name": "Elixir of Brutal Perforation",
+      "basePrice": 535000
+    },
+    "686": {
+      "id": 686,
+      "name": "Elixir of Death",
+      "basePrice": 239000
+    },
+    "687": {
+      "id": 687,
+      "name": "Brutal Death Elixir",
+      "basePrice": 715000
+    },
+    "688": {
+      "id": 688,
+      "name": "Elixir of Wind",
+      "basePrice": 73000
+    },
+    "689": {
+      "id": 689,
+      "name": "Elixir of Flowing Wind",
+      "basePrice": 245000
+    },
     "690": {
       "id": 690,
       "name": "Elixir of Swiftness",
-      "basePrice": 67000
+      "basePrice": 69500
     },
     "691": {
       "id": 691,
       "name": "Elixir of Intrepid Swiftness",
-      "basePrice": 178000
+      "basePrice": 187000
     },
     "692": {
       "id": 692,
       "name": "Elixir of Spells",
-      "basePrice": 78000
+      "basePrice": 75500
     },
     "693": {
       "id": 693,
@@ -26,17 +91,17 @@
     "696": {
       "id": 696,
       "name": "Elixir of Assassination",
-      "basePrice": 135000
+      "basePrice": 141000
     },
     "697": {
       "id": 697,
       "name": "Elixir of Lethal Assassin",
-      "basePrice": 610000
+      "basePrice": 565000
     },
     "698": {
       "id": 698,
       "name": "Elixir of Detection",
-      "basePrice": 461000
+      "basePrice": 457000
     },
     "699": {
       "id": 699,
@@ -56,17 +121,372 @@
     "702": {
       "id": 702,
       "name": "Elixir of Will",
-      "basePrice": 67000
+      "basePrice": 67500
     },
     "704": {
       "id": 704,
       "name": "Elixir of Fury",
+      "basePrice": 56500
+    },
+    "705": {
+      "id": 705,
+      "name": "Elixir of Endless Fury",
+      "basePrice": 159000
+    },
+    "708": {
+      "id": 708,
+      "name": "Elixir of Life",
       "basePrice": 61000
+    },
+    "709": {
+      "id": 709,
+      "name": "Elixir of Strong Life",
+      "basePrice": 192000
+    },
+    "712": {
+      "id": 712,
+      "name": "Grim Reaper's Elixir",
+      "basePrice": 349000
+    },
+    "713": {
+      "id": 713,
+      "name": "Grim Soul Reaper's Elixir",
+      "basePrice": 1050000
+    },
+    "716": {
+      "id": 716,
+      "name": "Defense Elixir",
+      "basePrice": 96000
+    },
+    "717": {
+      "id": 717,
+      "name": "Elixir of Steel Defense",
+      "basePrice": 231000
+    },
+    "718": {
+      "id": 718,
+      "name": "Elixir of Carnage",
+      "basePrice": 251000
+    },
+    "719": {
+      "id": 719,
+      "name": "Elixir of Brutal Carnage",
+      "basePrice": 625000
+    },
+    "720": {
+      "id": 720,
+      "name": "Elixir of Sky",
+      "basePrice": 305000
+    },
+    "721": {
+      "id": 721,
+      "name": "Merciless Sky Elixir",
+      "basePrice": 840000
+    },
+    "722": {
+      "id": 722,
+      "name": "Elixir of Endurance",
+      "basePrice": 82500
+    },
+    "723": {
+      "id": 723,
+      "name": "Elixir of Overwhelming Endurance",
+      "basePrice": 188000
+    },
+    "740": {
+      "id": 740,
+      "name": "Griffon's Elixir",
+      "basePrice": 343000
+    },
+    "762": {
+      "id": 762,
+      "name": "Elixir of Shock",
+      "basePrice": 67000
+    },
+    "763": {
+      "id": 763,
+      "name": "Elixir of Strong Shock",
+      "basePrice": 239000
+    },
+    "782": {
+      "id": 782,
+      "name": "Helix Elixir",
+      "basePrice": 153000
+    },
+    "783": {
+      "id": 783,
+      "name": "Splendid Helix Elixir",
+      "basePrice": 314000
+    },
+    "1180": {
+      "id": 1180,
+      "name": "Elixir of Destruction",
+      "basePrice": 320000
+    },
+    "1181": {
+      "id": 1181,
+      "name": "Elixir of Lethal Destruction",
+      "basePrice": 995000
+    },
+    "1389": {
+      "id": 1389,
+      "name": "Fury Draught",
+      "basePrice": 4580000
+    },
+    "1391": {
+      "id": 1391,
+      "name": "Adaptation Draught",
+      "basePrice": 3120000
+    },
+    "1393": {
+      "id": 1393,
+      "name": "Potential Draught",
+      "basePrice": 2700000
+    },
+    "1395": {
+      "id": 1395,
+      "name": "Corruption Draught",
+      "basePrice": 4870000
+    },
+    "1397": {
+      "id": 1397,
+      "name": "Berserk Draught",
+      "basePrice": 5700000
+    },
+    "1399": {
+      "id": 1399,
+      "name": "Harmony Draught",
+      "basePrice": 20700000
+    },
+    "1401": {
+      "id": 1401,
+      "name": "[Party] Harmony Draught - Human",
+      "basePrice": 22800000
+    },
+    "1403": {
+      "id": 1403,
+      "name": "[Party] Harmony Draught - Demihuman",
+      "basePrice": 22800000
+    },
+    "1405": {
+      "id": 1405,
+      "name": "[Party] Harmony Draught - Kamasylvia",
+      "basePrice": 24200000
+    },
+    "1407": {
+      "id": 1407,
+      "name": "[Party] Harmony Draught - Edania",
+      "basePrice": 23600000
+    },
+    "1409": {
+      "id": 1409,
+      "name": "Elixir of Edania",
+      "basePrice": 316000
+    },
+    "4801": {
+      "id": 4801,
+      "name": "Powder of Darkness",
+      "basePrice": 4020
+    },
+    "4802": {
+      "id": 4802,
+      "name": "Powder of Flame",
+      "basePrice": 2050
+    },
+    "4803": {
+      "id": 4803,
+      "name": "Powder of Rifts",
+      "basePrice": 1650
+    },
+    "4804": {
+      "id": 4804,
+      "name": "Powder of Earth",
+      "basePrice": 7400
+    },
+    "4805": {
+      "id": 4805,
+      "name": "Powder of Time",
+      "basePrice": 7300
+    },
+    "4901": {
+      "id": 4901,
+      "name": "Black Stone Powder",
+      "basePrice": 4960
+    },
+    "5001": {
+      "id": 5001,
+      "name": "Ash Sap",
+      "basePrice": 30000
+    },
+    "5002": {
+      "id": 5002,
+      "name": "Maple Sap",
+      "basePrice": 8350
+    },
+    "5003": {
+      "id": 5003,
+      "name": "Pine Sap",
+      "basePrice": 10000
+    },
+    "5004": {
+      "id": 5004,
+      "name": "Birch Sap",
+      "basePrice": 13200
+    },
+    "5005": {
+      "id": 5005,
+      "name": "Bloody Tree Knot",
+      "basePrice": 4160
+    },
+    "5006": {
+      "id": 5006,
+      "name": "Spirit's Leaf",
+      "basePrice": 2430
+    },
+    "5007": {
+      "id": 5007,
+      "name": "Monk's Branch",
+      "basePrice": 21000
+    },
+    "5008": {
+      "id": 5008,
+      "name": "Old Tree Bark",
+      "basePrice": 1940
+    },
+    "5009": {
+      "id": 5009,
+      "name": "Fir Sap",
+      "basePrice": 3910
+    },
+    "5010": {
+      "id": 5010,
+      "name": "Cedar Sap",
+      "basePrice": 23600
+    },
+    "5011": {
+      "id": 5011,
+      "name": "Red Tree Lump",
+      "basePrice": 1770
+    },
+    "5020": {
+      "id": 5020,
+      "name": "Thuja Sap",
+      "basePrice": 46600
+    },
+    "5024": {
+      "id": 5024,
+      "name": "Snowfield Cedar Sap",
+      "basePrice": 36900
+    },
+    "5025": {
+      "id": 5025,
+      "name": "Caphras Tree Sap",
+      "basePrice": 13700
+    },
+    "5205": {
+      "id": 5205,
+      "name": "Fruit of Nature",
+      "basePrice": 133000
+    },
+    "5301": {
+      "id": 5301,
+      "name": "Clear Liquid Reagent",
+      "basePrice": 8900
+    },
+    "5302": {
+      "id": 5302,
+      "name": "Pure Powder Reagent",
+      "basePrice": 8400
     },
     "5401": {
       "id": 5401,
       "name": "Sunrise Herb",
       "basePrice": 387
+    },
+    "5402": {
+      "id": 5402,
+      "name": "Silver Azalea",
+      "basePrice": 397
+    },
+    "5403": {
+      "id": 5403,
+      "name": "Fire Flake Flower",
+      "basePrice": 424
+    },
+    "5406": {
+      "id": 5406,
+      "name": "Everlasting Herb",
+      "basePrice": 82000
+    },
+    "5407": {
+      "id": 5407,
+      "name": "Fortune Teller Mushroom",
+      "basePrice": 700
+    },
+    "5408": {
+      "id": 5408,
+      "name": "Arrow Mushroom",
+      "basePrice": 775
+    },
+    "5409": {
+      "id": 5409,
+      "name": "Dwarf Mushroom",
+      "basePrice": 735
+    },
+    "5410": {
+      "id": 5410,
+      "name": "Cloud Mushroom",
+      "basePrice": 775
+    },
+    "5411": {
+      "id": 5411,
+      "name": "Sky Mushroom",
+      "basePrice": 735
+    },
+    "5412": {
+      "id": 5412,
+      "name": "Tiger Mushroom",
+      "basePrice": 735
+    },
+    "5413": {
+      "id": 5413,
+      "name": "Emperor Mushroom",
+      "basePrice": 700
+    },
+    "5414": {
+      "id": 5414,
+      "name": "Ghost Mushroom",
+      "basePrice": 775
+    },
+    "5416": {
+      "id": 5416,
+      "name": "Hump Mushroom",
+      "basePrice": 3510
+    },
+    "5417": {
+      "id": 5417,
+      "name": "Bluffer Mushroom",
+      "basePrice": 3260
+    },
+    "5418": {
+      "id": 5418,
+      "name": "Ancient Mushroom",
+      "basePrice": 3510
+    },
+    "5419": {
+      "id": 5419,
+      "name": "Amanita Mushroom",
+      "basePrice": 2630
+    },
+    "5420": {
+      "id": 5420,
+      "name": "Truffle Mushroom",
+      "basePrice": 187000
+    },
+    "5439": {
+      "id": 5439,
+      "name": "Wild Grass",
+      "basePrice": 9700
     }
   }
 }

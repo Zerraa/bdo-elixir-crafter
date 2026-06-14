@@ -1,0 +1,217 @@
+{
+  "6601": {
+    "name": "Oil of Regeneration",
+    "marketId": 6601,
+    "materials": [
+      { "name": "Legendary Beast's Blood", "marketId": 6351, "qty": 1 },
+      { "name": "Red Tree Lump", "marketId": 5011, "qty": 1 },
+      { "name": "Fruit of Nature", "marketId": 5205, "qty": 1 },
+      { "name": "Powder of Rifts", "marketId": 4803, "qty": 1 }
+    ],
+    "alternatives": [
+      {
+        "slotIndex": 1,
+        "or": { "name": "Everlasting Herb", "marketId": 5406, "qty": 1 }
+      }
+    ]
+  },
+  "6602": {
+    "name": "Oil of Storms",
+    "marketId": 6602,
+    "materials": [
+      { "name": "Tyrant's Blood", "marketId": 6352, "qty": 1 },
+      { "name": "Old Tree Bark", "marketId": 5008, "qty": 1 },
+      { "name": "Fruit of Nature", "marketId": 5205, "qty": 1 },
+      { "name": "Powder of Time", "marketId": 4805, "qty": 1 }
+    ]
+  },
+  "6603": {
+    "name": "Oil of Fortitude",
+    "marketId": 6603,
+    "materials": [
+      { "name": "Clown's Blood", "marketId": 6353, "qty": 1 },
+      { "name": "Monk's Branch", "marketId": 5007, "qty": 1 },
+      { "name": "Fruit of Nature", "marketId": 5205, "qty": 1 },
+      { "name": "Powder of Flame", "marketId": 4802, "qty": 1 }
+    ]
+  },
+  "6604": {
+    "name": "Oil of Corruption",
+    "marketId": 6604,
+    "materials": [
+      { "name": "Sinner's Blood", "marketId": 6354, "qty": 1 },
+      { "name": "Spirit's Leaf", "marketId": 5006, "qty": 1 },
+      { "name": "Fruit of Nature", "marketId": 5205, "qty": 1 },
+      { "name": "Powder of Darkness", "marketId": 4801, "qty": 1 }
+    ]
+  },
+  "6605": {
+    "name": "Oil of Tranquility",
+    "marketId": 6605,
+    "materials": [
+      { "name": "Wise Man's Blood", "marketId": 6355, "qty": 1 },
+      { "name": "Bloody Tree Knot", "marketId": 5005, "qty": 1 },
+      { "name": "Fruit of Nature", "marketId": 5205, "qty": 1 },
+      { "name": "Powder of Earth", "marketId": 4804, "qty": 1 }
+    ]
+  },
+  "6351": {
+    "name": "Legendary Beast's Blood",
+    "marketId": 6351,
+    "materials": [
+      { "name": "Pure Powder Reagent", "marketId": 5302, "qty": 1 },
+      { "name": "Lizard Blood", "marketId": 6208, "qty": 2 },
+      { "name": "Trace of Nature", "marketId": 5960, "qty": 1 },
+      { "name": "Spirit's Leaf", "marketId": 5006, "qty": 1 }
+    ],
+    "note": "Lizard Blood slot: any Blood group 5 (Lizard ×2, or 1× Bat/Cobra/Kuku Bird/Worm Blood — worth 2 each)."
+  },
+  "6352": {
+    "name": "Tyrant's Blood",
+    "marketId": 6352,
+    "materials": [
+      { "name": "Pure Powder Reagent", "marketId": 5302, "qty": 1 },
+      { "name": "Bear Blood", "marketId": 6213, "qty": 2 },
+      { "name": "Trace of Nature", "marketId": 5960, "qty": 1 },
+      { "name": "Monk's Branch", "marketId": 5007, "qty": 1 }
+    ],
+    "alternatives": [
+      {
+        "slotIndex": 1,
+        "or": { "name": "Lion Blood", "marketId": 6223, "qty": 2 }
+      },
+      {
+        "slotIndex": 1,
+        "or": { "name": "Yak Blood", "marketId": 6225, "qty": 2 }
+      }
+    ]
+  },
+  "6353": {
+    "name": "Clown's Blood",
+    "marketId": 6353,
+    "materials": [
+      { "name": "Clear Liquid Reagent", "marketId": 5301, "qty": 1 },
+      { "name": "Wolf Blood", "marketId": 6214, "qty": 2 },
+      { "name": "Powder of Darkness", "marketId": 4801, "qty": 1 },
+      { "name": "Spirit's Leaf", "marketId": 5006, "qty": 1 }
+    ],
+    "alternatives": [
+      {
+        "slotIndex": 1,
+        "or": { "name": "Rhino Blood", "marketId": 6204, "qty": 2 }
+      }
+    ]
+  },
+  "6354": {
+    "name": "Sinner's Blood",
+    "marketId": 6354,
+    "materials": [
+      { "name": "Clear Liquid Reagent", "marketId": 5301, "qty": 1 },
+      { "name": "Pig Blood", "marketId": 6205, "qty": 2 },
+      { "name": "Powder of Flame", "marketId": 4802, "qty": 1 },
+      { "name": "Bloody Tree Knot", "marketId": 5005, "qty": 1 }
+    ],
+    "alternatives": [
+      {
+        "slotIndex": 1,
+        "or": { "name": "Deer Blood", "marketId": 6202, "qty": 2 }
+      }
+    ]
+  },
+  "6355": {
+    "name": "Wise Man's Blood",
+    "marketId": 6355,
+    "materials": [
+      { "name": "Clear Liquid Reagent", "marketId": 5301, "qty": 1 },
+      { "name": "Fox Blood", "marketId": 6203, "qty": 2 },
+      { "name": "Trace of Nature", "marketId": 5960, "qty": 1 },
+      { "name": "Monk's Branch", "marketId": 5007, "qty": 1 }
+    ],
+    "alternatives": [
+      {
+        "slotIndex": 1,
+        "or": { "name": "Scorpion Blood", "marketId": 6224, "qty": 2 }
+      }
+    ]
+  },
+  "5302": {
+    "name": "Pure Powder Reagent",
+    "marketId": 5302,
+    "materials": [
+      { "name": "Sugar", "marketId": 9002, "qty": 1 },
+      { "name": "Silver Azalea", "marketId": 5402, "qty": 1 },
+      { "name": "Purified Water", "marketId": 6656, "qty": 1 },
+      { "name": "Wild Grass", "marketId": 5439, "qty": 1 }
+    ],
+    "alternatives": [
+      {
+        "slotIndex": 3,
+        "or": { "name": "Weeds", "marketId": 5600, "qty": 1 }
+      }
+    ]
+  },
+  "5301": {
+    "name": "Clear Liquid Reagent",
+    "marketId": 5301,
+    "materials": [
+      { "name": "Salt", "marketId": 9001, "qty": 1 },
+      { "name": "Sunrise Herb", "marketId": 5401, "qty": 1 },
+      { "name": "Purified Water", "marketId": 6656, "qty": 1 },
+      { "name": "Wild Grass", "marketId": 5439, "qty": 1 }
+    ],
+    "alternatives": [
+      {
+        "slotIndex": 0,
+        "or": { "name": "Sun-dried Salt", "marketId": 9003, "qty": 1 }
+      },
+      {
+        "slotIndex": 3,
+        "or": { "name": "Weeds", "marketId": 5600, "qty": 1 }
+      }
+    ]
+  },
+  "6656": {
+    "name": "Purified Water",
+    "marketId": 6656,
+    "method": "Filter",
+    "note": "Filter bottled water. Yield increases with Processing level (up to ~2.5 per bottle at Artisan).",
+    "materials": [
+      { "name": "Bottle of River Water", "marketId": 6653, "qty": 1 }
+    ]
+  },
+  "517": {
+    "name": "HP Potion (Small)",
+    "marketId": 517,
+    "note": "Buy from Material Vendor or craft via Simple Alchemy."
+  },
+  "4801": {
+    "name": "Powder of Darkness",
+    "marketId": 4801,
+    "note": "Mining nodes (small chance from rocks) or Central Market."
+  },
+  "4802": {
+    "name": "Powder of Flame",
+    "marketId": 4802,
+    "note": "Mining nodes (small chance from rocks) or Central Market."
+  },
+  "4803": {
+    "name": "Powder of Rifts",
+    "marketId": 4803,
+    "note": "Mining nodes (small chance from rocks) or Central Market."
+  },
+  "4804": {
+    "name": "Powder of Earth",
+    "marketId": 4804,
+    "note": "Mining nodes (small chance from rocks) or Central Market."
+  },
+  "4805": {
+    "name": "Powder of Time",
+    "marketId": 4805,
+    "note": "Mining nodes (small chance from rocks) or Central Market."
+  },
+  "5205": {
+    "name": "Fruit of Nature",
+    "marketId": 5205,
+    "note": "Farming secondary or Central Market."
+  }
+}

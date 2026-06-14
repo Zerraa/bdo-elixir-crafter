@@ -45,6 +45,13 @@ const state = {
   partyCount: 10,
   useLionForBear: true,
   ignoreClearReagent: true,
+  craftIntermediates: true,
+  useWeedsForWildGrass: false,
+  useSunDriedSalt: false,
+  useDeerForPig: false,
+  useRhinoForWolf: false,
+  useScorpionForFox: false,
+  useEverlastingHerbForRedTreeLump: false,
   sortBy: "cost",
 };
 
@@ -55,6 +62,13 @@ function getPrefs() {
   return {
     useLionForBear: state.useLionForBear,
     ignoreClearReagent: state.ignoreClearReagent,
+    craftIntermediates: state.craftIntermediates,
+    useWeedsForWildGrass: state.useWeedsForWildGrass,
+    useSunDriedSalt: state.useSunDriedSalt,
+    useDeerForPig: state.useDeerForPig,
+    useRhinoForWolf: state.useRhinoForWolf,
+    useScorpionForFox: state.useScorpionForFox,
+    useEverlastingHerbForRedTreeLump: state.useEverlastingHerbForRedTreeLump,
   };
 }
 
@@ -97,6 +111,29 @@ function applyStateToUI() {
   const ignoreClear = document.getElementById("ignore-clear-reagent");
   if (ignoreClear) ignoreClear.checked = state.ignoreClearReagent;
 
+  const craftIntermediates = document.getElementById("craft-intermediates");
+  if (craftIntermediates) craftIntermediates.checked = state.craftIntermediates;
+
+  const weedsForWildGrass = document.getElementById("weeds-for-wild-grass");
+  if (weedsForWildGrass) weedsForWildGrass.checked = state.useWeedsForWildGrass;
+
+  const sunDriedForSalt = document.getElementById("sun-dried-for-salt");
+  if (sunDriedForSalt) sunDriedForSalt.checked = state.useSunDriedSalt;
+
+  const deerForPig = document.getElementById("deer-for-pig");
+  if (deerForPig) deerForPig.checked = state.useDeerForPig;
+
+  const rhinoForWolf = document.getElementById("rhino-for-wolf");
+  if (rhinoForWolf) rhinoForWolf.checked = state.useRhinoForWolf;
+
+  const scorpionForFox = document.getElementById("scorpion-for-fox");
+  if (scorpionForFox) scorpionForFox.checked = state.useScorpionForFox;
+
+  const everlastingForRedTree = document.getElementById("everlasting-for-red-tree");
+  if (everlastingForRedTree) {
+    everlastingForRedTree.checked = state.useEverlastingHerbForRedTreeLump;
+  }
+
   const sortSelect = document.getElementById("sort-select");
   if (sortSelect) sortSelect.value = state.sortBy;
 
@@ -112,8 +149,12 @@ function applyStateToUI() {
 }
 
 async function loadCraftingData() {
-  const res = await fetch("./data/crafting.json");
-  craftingData = await res.json();
+  const [craftRes, intRes] = await Promise.all([
+    fetch("./data/crafting.json"),
+    fetch("./data/intermediates.json"),
+  ]);
+  craftingData = await craftRes.json();
+  craftingData.intermediates = await intRes.json();
 
   Object.assign(state, loadSession(craftingData));
 
@@ -422,6 +463,41 @@ function bindPrefs() {
   if (ignoreClear) {
     ignoreClear.addEventListener("change", () => {
       state.ignoreClearReagent = ignoreClear.checked;
+      persistSession(state);
+      refreshPrices();
+    });
+  }
+
+  const craftIntermediates = document.getElementById("craft-intermediates");
+  if (craftIntermediates) {
+    craftIntermediates.addEventListener("change", () => {
+      state.craftIntermediates = craftIntermediates.checked;
+      persistSession(state);
+      refreshPrices();
+    });
+  }
+
+  const weedsForWildGrass = document.getElementById("weeds-for-wild-grass");
+  if (weedsForWildGrass) {
+    weedsForWildGrass.addEventListener("change", () => {
+      state.useWeedsForWildGrass = weedsForWildGrass.checked;
+      persistSession(state);
+      refreshPrices();
+    });
+  }
+
+  const prefBindings = [
+    ["sun-dried-for-salt", "useSunDriedSalt"],
+    ["deer-for-pig", "useDeerForPig"],
+    ["rhino-for-wolf", "useRhinoForWolf"],
+    ["scorpion-for-fox", "useScorpionForFox"],
+    ["everlasting-for-red-tree", "useEverlastingHerbForRedTreeLump"],
+  ];
+  for (const [id, key] of prefBindings) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    el.addEventListener("change", () => {
+      state[key] = el.checked;
       persistSession(state);
       refreshPrices();
     });

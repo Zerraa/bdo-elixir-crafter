@@ -1,5 +1,7 @@
 const CODEX_BASE = "https://bdocodex.com/items/new_icon";
 
+const CONSUMABLE_POTION_IDS = new Set([517, 518]);
+
 function codexIconFile(marketId) {
   const n = Number(marketId);
   const width = n >= 100000 ? 9 : 8;
@@ -14,8 +16,19 @@ function productMaterialIconUrl(marketId) {
   return `${CODEX_BASE}/03_etc/07_productmaterial/${codexIconFile(marketId)}.webp`;
 }
 
+function isConsumablePotion(marketId) {
+  return CONSUMABLE_POTION_IDS.has(Number(marketId));
+}
+
 export function buildIconOverrides(data) {
   const overrides = { ...(data?.iconOverrides || {}) };
+
+  for (const id of data?.potionMarketIds || []) {
+    overrides[String(id)] = potionIconUrl(id);
+  }
+  for (const id of CONSUMABLE_POTION_IDS) {
+    overrides[String(id)] = potionIconUrl(id);
+  }
 
   if (data?.catalyst?.marketId) {
     overrides[String(data.catalyst.marketId)] = productMaterialIconUrl(
@@ -64,6 +77,12 @@ export function itemIconUrlCandidates(marketId, overrides = {}) {
   const key = String(marketId);
   if (overrides[key]) return [overrides[key]];
   const file = codexIconFile(marketId);
+  if (isConsumablePotion(marketId)) {
+    return [
+      `${CODEX_BASE}/03_etc/08_potion/${file}.webp`,
+      `${CODEX_BASE}/03_etc/07_productmaterial/${file}.webp`,
+    ];
+  }
   return [
     `${CODEX_BASE}/03_etc/07_productmaterial/${file}.webp`,
     `${CODEX_BASE}/03_etc/08_potion/${file}.webp`,

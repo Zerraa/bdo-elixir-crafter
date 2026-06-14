@@ -1,3 +1,4 @@
+import { shouldApplySubstitution } from "./calculator.js";
 import {
   formatSilver,
   lineTotal,
@@ -52,18 +53,47 @@ function renderAlchemySlots(materials, iconOverrides, { compact = false } = {}) 
 }
 
 function recipeWithSubstitutions(materials, data, prefs) {
-  if (!materials || !data?.substitutions || !prefs?.useLionForBear) {
-    return materials || [];
-  }
+  if (!materials || !data?.substitutions) return materials || [];
   return materials.map((m) => {
     const sub = data.substitutions[m.name];
-    if (!sub?.replaceWith) return m;
+    if (!shouldApplySubstitution(sub, prefs)) return m;
     return {
       ...m,
       name: sub.replaceWith.name,
       marketId: sub.replaceWith.marketId,
     };
   });
+}
+
+function renderPrecraftSteps(steps, iconOverrides, { compact = false } = {}) {
+  if (!steps?.length) return "";
+
+  return steps
+    .map((step) => {
+      const title = codexLink(step.marketId, step.name);
+      const meta = step.method ? `<span class="muted"> · ${step.method}</span>` : "";
+      const altNote =
+        step.alternatives?.length > 0
+          ? `<p class="muted sub-hint">Alt: ${step.alternatives.map((a) => a.or?.name).filter(Boolean).join(" or ")}</p>`
+          : "";
+
+      if (step.materials?.length) {
+        return `
+        <details class="precraft-step"${compact ? " open" : ""}>
+          <summary>${title}${meta}</summary>
+          ${altNote}
+          ${step.note ? `<p class="muted sub-hint">${step.note}</p>` : ""}
+          ${renderAlchemySlots(step.materials, iconOverrides, { compact: true })}
+        </details>`;
+      }
+
+      return `
+        <details class="precraft-step"${compact ? " open" : ""}>
+          <summary>${title}</summary>
+          <p class="muted sub-hint">${step.note || "Obtain from Central Market or gathering."}</p>
+        </details>`;
+    })
+    .join("");
 }
 
 export function renderAlchemySetup(calcResult, data, prefs, iconOverrides = {}) {
@@ -78,10 +108,15 @@ export function renderAlchemySetup(calcResult, data, prefs, iconOverrides = {}) 
     data,
     prefs
   );
+  const precraft = renderPrecraftSteps(calcResult.precraftSteps, iconOverrides);
+  const precraftBlock = precraft
+    ? `<p class="section-label">Precraft steps</p>${precraft}`
+    : "";
 
   el.innerHTML = `
     <p class="section-label">Alchemy table</p>
     ${renderAlchemySlots(recipe, iconOverrides)}
+    ${precraftBlock}
   `;
 }
 
@@ -251,11 +286,16 @@ export function renderBreakdown(calcResult, data, iconOverrides = {}) {
           const slotLabel = isBlue
             ? '<p class="muted section-label">Simple Alchemy per blue</p>'
             : "";
+          const precraft =
+            !isBlue && e.precraftSteps?.length
+              ? `<p class="muted section-label">Precraft</p>${renderPrecraftSteps(e.precraftSteps, iconOverrides, { compact: true })}`
+              : "";
           return `
           <details class="elixir-recipe">
             <summary class="breakdown-title-row">${elixirIcon} ${e.name} · ${summary}</summary>
             ${slotLabel}
             ${renderAlchemySlots(e.recipePerCraft, iconOverrides, { compact: true })}
+            ${precraft}
           </details>`;
         })
         .join("");
@@ -328,6 +368,10 @@ export function renderShoppingList(calcResult, prices, sortBy = "cost", prefs = 
       noteEl.hidden = false;
       noteEl.textContent =
         "Assumes harmonies and hunt/will elixirs ready — buy catalyst only.";
+    } else if (prefs.craftIntermediates !== false) {
+      noteEl.hidden = false;
+      noteEl.textContent =
+        "Intermediates expanded — precraft oils/reagents yourself (see sidebar).";
     } else {
       noteEl.hidden = true;
       noteEl.textContent = "";
