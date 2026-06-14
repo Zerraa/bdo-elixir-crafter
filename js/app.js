@@ -13,7 +13,6 @@ import {
   renderBreakdown,
   renderShoppingList,
   renderMarketStatus,
-  renderAlchemySetup,
   renderCompare,
   populateElixirSelect,
   populatePartyVariants,
@@ -296,8 +295,7 @@ function renderAll() {
       loading: refreshInFlight,
     }, prefs);
   }
-  renderBreakdown(calc, craftingData, iconOverrides);
-  renderAlchemySetup(calc, craftingData, prefs, iconOverrides);
+  renderBreakdown(calc, craftingData, prefs, iconOverrides);
   renderShoppingList(calc, prices, state.sortBy, { ...prefs, iconOverrides });
   updateElixirSelectIcon(craftingData, state.elixirName, iconOverrides);
   renderMarketStatus(priceMeta, costInfo.hasMissing, {

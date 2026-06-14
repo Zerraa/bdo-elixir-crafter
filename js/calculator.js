@@ -1,4 +1,4 @@
-import { expandIntermediates, getPrecraftSteps } from "./expand.js";
+import { expandIntermediates } from "./expand.js";
 
 export function getYields(data, greenExpectedOverride) {
   const y = data.yields?.elixirAlchemy ?? {};
@@ -141,15 +141,12 @@ export function calcElixirsOnly(elixirName, crafts, data, prefs = {}) {
     { [elixirName]: craftCount },
     data.elixirs
   );
-  const recipeForGuide = recipeWithSubstitutions(recipe.materials, data, prefs);
-
   return {
     mode: "elixirs",
     elixirName,
     crafts: craftCount,
     recipePerCraft: recipe.materials,
     materials: finalizeElixirMaterials(rawMaterials, data, prefs),
-    precraftSteps: getPrecraftSteps(recipeForGuide, data, prefs),
     elixirMarketItems: [],
     expectedOutput: {
       greens: calcExpectedGreenOutput(craftCount, yields),
@@ -263,14 +260,6 @@ export function calcFullChain(harmonyCrafts, gradeMode, data, prefs = {}) {
           gradeMode === "blue"
             ? blueUpgradeRecipePerCraft(name, data)
             : recipe.materials,
-        precraftSteps:
-          gradeMode === "blue"
-            ? []
-            : getPrecraftSteps(
-                recipeWithSubstitutions(recipe.materials, data, prefs),
-                data,
-                prefs
-              ),
       };
     }),
   }));

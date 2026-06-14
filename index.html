@@ -21,7 +21,7 @@
     <main class="main">
       <aside class="sidebar">
         <section class="sidebar-section">
-          <center><h2>Craft mode</h2></center>
+          <h2>Craft mode</h2>
           <div class="mode-tabs mode-tabs--three">
             <button type="button" class="mode-tab active" data-mode="elixirs">Elixirs</button>
             <button type="button" class="mode-tab" data-mode="harmony">Harmony</button>
@@ -42,7 +42,6 @@
             <span>Number of Elixir crafts</span>
             <input id="elixir-crafts" type="number" min="0" value="500">
           </label>
-          <div id="alchemy-setup" class="alchemy-setup"></div>
         </section>
 
         <section id="panel-harmony" class="sidebar-section mode-panel" hidden>
@@ -71,48 +70,48 @@
         </section>
         </div>
 
-        <section class="sidebar-section">
-          <center><h2>Shopping preferences</h2></center>
+        <details class="sidebar-options sidebar-section">
+          <summary>Options</summary>
           <label class="checkbox-row">
             <input type="checkbox" id="lion-for-bear" checked>
-            Use Lion Blood instead of Bear Blood
+            Lion Blood for Bear Blood
           </label>
-          <label class="checkbox-row checkbox-row--icon">
+          <label class="checkbox-row">
             <input type="checkbox" id="ignore-clear-reagent" checked>
-            Ignore Clear Liquid Reagent cost (Mysterious Catalyst exchange)
+            Free Clear Liquid Reagent
           </label>
           <label class="checkbox-row">
             <input type="checkbox" id="craft-intermediates" checked>
-            Craft intermediates myself (expand to raw materials)
+            Expand intermediates
           </label>
           <label class="checkbox-row">
             <input type="checkbox" id="weeds-for-wild-grass">
-            Use Weeds instead of Wild Grass
+            Weeds for Wild Grass
           </label>
           <details class="subst-prefs">
-            <summary>More material substitutes</summary>
+            <summary>More substitutes</summary>
             <label class="checkbox-row">
               <input type="checkbox" id="sun-dried-for-salt">
-              Use Sun-dried Salt instead of Salt
+              Sun-dried Salt for Salt
             </label>
             <label class="checkbox-row">
               <input type="checkbox" id="deer-for-pig">
-              Use Deer Blood instead of Pig Blood
+              Deer Blood for Pig Blood
             </label>
             <label class="checkbox-row">
               <input type="checkbox" id="rhino-for-wolf">
-              Use Rhino Blood instead of Wolf Blood
+              Rhino Blood for Wolf Blood
             </label>
             <label class="checkbox-row">
               <input type="checkbox" id="scorpion-for-fox">
-              Use Scorpion Blood instead of Fox Blood
+              Scorpion Blood for Fox Blood
             </label>
             <label class="checkbox-row">
               <input type="checkbox" id="everlasting-for-red-tree">
-              Use Everlasting Herb instead of Red Tree Lump
+              Everlasting Herb for Red Tree Lump
             </label>
           </details>
-        </section>
+        </details>
       </aside>
 
       <div class="results">
@@ -163,8 +162,6 @@
             </div>
           </section>
         </div>
-
-        <p class="footnote">* Some market prices unavailable. Mushrooms use Mushroom Vendor prices; herbs use Herb Vendor prices; Harmony catalyst uses Old Moon Merchant (1.00M). Other materials from <a href="https://api.arsha.io" target="_blank" rel="noopener">api.arsha.io</a> (EU Central Market).<br>Click Refresh if prices fail to load.</p>
       </div>
     </main>
   </div>
@@ -173,7 +170,7 @@
     <div class="compare-modal">
       <div class="compare-header">
         <div>
-          <center><h2>Buy vs Craft</h2></center>
+          <h2>Buy vs Craft</h2>
           <p class="muted compare-hint">Finished item on Central Market vs est. craft cost</p>
           <p id="compare-context" class="compare-context"></p>
           <p id="compare-sync-status" class="compare-sync-status muted"></p>

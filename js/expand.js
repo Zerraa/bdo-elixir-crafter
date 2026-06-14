@@ -19,6 +19,104 @@ function resolveMaterials(entry) {
   return (entry.materials || []).map((m) => ({ ...m }));
 }
 
+function applySubstitutionWithCheck(mat, data, prefs, shouldApplySubstitution) {
+  const sub = data?.substitutions?.[mat.name];
+  if (sub && shouldApplySubstitution(sub, prefs)) {
+    return {
+      ...mat,
+      name: sub.replaceWith.name,
+      marketId: sub.replaceWith.marketId,
+      substitutedFrom: mat.name,
+    };
+  }
+  return mat;
+}
+
+function buildTreeNode(mat, data, prefs, depth, visiting, shouldApplySubstitution) {
+  if (depth > MAX_DEPTH) {
+    return { ...mat, craftable: false };
+  }
+
+  const entry = getIntermediate(data, mat.marketId);
+
+  if (!entry) {
+    return { ...mat, craftable: false };
+  }
+
+  if (shouldSkipItem(mat.marketId, prefs) || !isExpandable(entry)) {
+    return {
+      name: entry.name ?? mat.name,
+      marketId: mat.marketId,
+      qty: mat.qty,
+      craftable: false,
+      note: entry.note,
+      method: entry.method,
+      substitutedFrom: mat.substitutedFrom,
+    };
+  }
+
+  const key = String(mat.marketId);
+  if (visiting.has(key)) {
+    return { ...mat, craftable: false };
+  }
+
+  visiting.add(key);
+  const children = resolveMaterials(entry).map((sub) => {
+    const scaled = {
+      name: sub.name,
+      marketId: sub.marketId,
+      qty: sub.qty * mat.qty,
+    };
+    const withSub = applySubstitutionWithCheck(
+      scaled,
+      data,
+      prefs,
+      shouldApplySubstitution
+    );
+    return buildTreeNode(
+      withSub,
+      data,
+      prefs,
+      depth + 1,
+      visiting,
+      shouldApplySubstitution
+    );
+  });
+  visiting.delete(key);
+
+  return {
+    name: entry.name ?? mat.name,
+    marketId: mat.marketId,
+    qty: mat.qty,
+    craftable: true,
+    children,
+    alternatives: entry.alternatives,
+    note: entry.note,
+    method: entry.method,
+    substitutedFrom: mat.substitutedFrom,
+  };
+}
+
+export function buildMaterialTree(materials, data, prefs, shouldApplySubstitution) {
+  const nodes = (materials || []).map((m) => {
+    const withSub = applySubstitutionWithCheck(
+      m,
+      data,
+      prefs,
+      shouldApplySubstitution
+    );
+    return buildTreeNode(
+      withSub,
+      data,
+      prefs,
+      0,
+      new Set(),
+      shouldApplySubstitution
+    );
+  });
+  return nodes.sort((a, b) => a.name.localeCompare(b.name));
+}
+
 function mergeMaterialList(items) {
   const byId = new Map();
   for (const item of items) {
@@ -109,7 +207,11 @@ export function expandIntermediates(materials, data, prefs = {}) {
     if (shouldSkipItem(mat.marketId, prefs)) continue;
     expanded.push(
       ...expandOne(
-        { name: mat.name, marketId: mat.marketId, substitutedFrom: mat.substitutedFrom },
+        {
+          name: mat.name,
+          marketId: mat.marketId,
+          substitutedFrom: mat.substitutedFrom,
+        },
         mat.qty,
         data,
         prefs,
@@ -122,47 +224,10 @@ export function expandIntermediates(materials, data, prefs = {}) {
   return mergeMaterialList(expanded);
 }
 
-function buildStep(entry, mat) {
-  return {
-    name: entry.name ?? mat.name,
-    marketId: mat.marketId,
-    qtyPerElixirCraft: mat.qty,
-    method: entry.method,
-    note: entry.note,
-    materials: resolveMaterials(entry),
-    alternatives: entry.alternatives,
-  };
-}
-
-function collectPrecraftSteps(materials, data, prefs, steps, seen) {
-  for (const mat of materials || []) {
-    if (shouldSkipItem(mat.marketId, prefs)) continue;
-    const key = String(mat.marketId);
-    const entry = getIntermediate(data, mat.marketId);
-    if (!entry || seen.has(key)) continue;
-
-    if (isExpandable(entry)) {
-      collectPrecraftSteps(resolveMaterials(entry), data, prefs, steps, seen);
-      seen.add(key);
-      steps.push(buildStep(entry, mat));
-      continue;
-    }
-
-    if (entry.note) {
-      seen.add(key);
-      steps.push({
-        name: entry.name ?? mat.name,
-        marketId: mat.marketId,
-        qtyPerElixirCraft: mat.qty,
-        note: entry.note,
-        materials: [],
-      });
-    }
-  }
-}
-
-export function getPrecraftSteps(recipeMaterials, data, prefs = {}) {
-  const steps = [];
-  collectPrecraftSteps(recipeMaterials, data, prefs, steps, new Set());
-  return steps;
+export function scaleRecipeMaterials(materials, multiplier) {
+  const m = Math.max(0, multiplier);
+  return (materials || []).map((mat) => ({
+    ...mat,
+    qty: mat.qty * m,
+  }));
 }

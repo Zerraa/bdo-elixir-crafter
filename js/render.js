@@ -1,4 +1,5 @@
 import { shouldApplySubstitution } from "./calculator.js";
+import { buildMaterialTree, scaleRecipeMaterials } from "./expand.js";
 import {
   formatSilver,
   lineTotal,
@@ -32,6 +33,72 @@ function formatExpectedOutput(out) {
   return { greenLine, blueLine };
 }
 
+function formatAltHints(alternatives) {
+  if (!alternatives?.length) return "";
+  const names = alternatives.map((a) => a.or?.name).filter(Boolean);
+  if (!names.length) return "";
+  return `<div class="muted sub-hint">or ${names.join(", ")}</div>`;
+}
+
+function renderMaterialTreeRows(nodes, iconOverrides, depth = 0) {
+  return (nodes || [])
+    .map((node) => {
+      const indent = depth > 0 ? ` breakdown-row--depth-${Math.min(depth, 4)}` : "";
+      const subHint = node.substitutedFrom
+        ? `<div class="muted sub-hint">replaces ${node.substitutedFrom}</div>`
+        : "";
+      const metaHint = [
+        node.method ? `<div class="muted sub-hint">${node.method}</div>` : "",
+        node.note && !node.craftable
+          ? `<div class="muted sub-hint">${node.note}</div>`
+          : "",
+        node.craftable ? formatAltHints(node.alternatives) : "",
+      ].join("");
+
+      if (node.craftable && node.children?.length) {
+        const nested = renderMaterialTreeRows(node.children, iconOverrides, depth + 1);
+        return `
+        <tr class="breakdown-row breakdown-row--expandable${indent}">
+          <td colspan="2">
+            <details class="breakdown-expand">
+              <summary class="breakdown-expand-summary">
+                ${materialCell(node.marketId, node.name, iconOverrides)}
+                <span class="breakdown-expand-qty num">${node.qty.toLocaleString()}</span>
+              </summary>
+              ${node.note ? `<p class="muted sub-hint breakdown-expand-note">${node.note}</p>` : ""}
+              <table class="data-table gather-table breakdown-nested">
+                <tbody>${nested}</tbody>
+              </table>
+            </details>
+            ${subHint}${metaHint}
+          </td>
+        </tr>`;
+      }
+
+      return `
+        <tr class="breakdown-row${indent}">
+          <td>${materialCell(node.marketId, node.name, iconOverrides)}${subHint}${metaHint}</td>
+          <td class="num"><b>${node.qty.toLocaleString()}</b></td>
+        </tr>`;
+    })
+    .join("");
+}
+
+function renderMaterialTree(materials, data, prefs, iconOverrides) {
+  const tree = buildMaterialTree(
+    materials,
+    data,
+    prefs,
+    shouldApplySubstitution
+  );
+  const rows = renderMaterialTreeRows(tree, iconOverrides);
+  return `
+    <table class="data-table gather-table breakdown-tree">
+      <thead><tr><th>Material</th><th class="num">Total</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
 function renderAlchemySlots(materials, iconOverrides, { compact = false } = {}) {
   const rows = (materials || [])
     .map((m) => {
@@ -63,61 +130,6 @@ function recipeWithSubstitutions(materials, data, prefs) {
       marketId: sub.replaceWith.marketId,
     };
   });
-}
-
-function renderPrecraftSteps(steps, iconOverrides, { compact = false } = {}) {
-  if (!steps?.length) return "";
-
-  return steps
-    .map((step) => {
-      const title = codexLink(step.marketId, step.name);
-      const meta = step.method ? `<span class="muted"> · ${step.method}</span>` : "";
-      const altNote =
-        step.alternatives?.length > 0
-          ? `<p class="muted sub-hint">Alt: ${step.alternatives.map((a) => a.or?.name).filter(Boolean).join(" or ")}</p>`
-          : "";
-
-      if (step.materials?.length) {
-        return `
-        <details class="precraft-step"${compact ? " open" : ""}>
-          <summary>${title}${meta}</summary>
-          ${altNote}
-          ${step.note ? `<p class="muted sub-hint">${step.note}</p>` : ""}
-          ${renderAlchemySlots(step.materials, iconOverrides, { compact: true })}
-        </details>`;
-      }
-
-      return `
-        <details class="precraft-step"${compact ? " open" : ""}>
-          <summary>${title}</summary>
-          <p class="muted sub-hint">${step.note || "Obtain from Central Market or gathering."}</p>
-        </details>`;
-    })
-    .join("");
-}
-
-export function renderAlchemySetup(calcResult, data, prefs, iconOverrides = {}) {
-  const el = document.getElementById("alchemy-setup");
-  if (!el || calcResult.mode !== "elixirs") {
-    if (el) el.innerHTML = "";
-    return;
-  }
-
-  const recipe = recipeWithSubstitutions(
-    calcResult.recipePerCraft,
-    data,
-    prefs
-  );
-  const precraft = renderPrecraftSteps(calcResult.precraftSteps, iconOverrides);
-  const precraftBlock = precraft
-    ? `<p class="section-label">Precraft steps</p>${precraft}`
-    : "";
-
-  el.innerHTML = `
-    <p class="section-label">Alchemy table</p>
-    ${renderAlchemySlots(recipe, iconOverrides)}
-    ${precraftBlock}
-  `;
 }
 
 function renderShoppingRow(row, iconOverrides, { showIcons = true } = {}) {
@@ -162,7 +174,7 @@ export function renderStats(calcResult, costInfo) {
 
   if (isElixirs) {
     const { greenLine, blueLine } = formatExpectedOutput(calcResult.expectedOutput);
-    statsEl.className = "stats";
+    statsEl.className = "stats stats--three";
     statsEl.innerHTML = `
       <div class="stat"><span class="stat-label">Total Crafts</span><span class="stat-value">${calcResult.crafts.toLocaleString()}</span></div>
       <div class="stat">
@@ -172,7 +184,6 @@ export function renderStats(calcResult, costInfo) {
           <span class="output-blue">${blueLine}</span>
         </span>
       </div>
-      <div class="stat stat--placeholder" aria-hidden="true"></div>
       <div class="stat"><span class="stat-label">Est. cost</span><span class="stat-value accent">${formatSilver(costInfo.total)}${costInfo.hasMissing ? "*" : ""}</span></div>
     `;
   } else {
@@ -198,7 +209,7 @@ export function renderStats(calcResult, costInfo) {
   }
 }
 
-export function renderBreakdown(calcResult, data, iconOverrides = {}) {
+export function renderBreakdown(calcResult, data, prefs = {}, iconOverrides = {}) {
   const el = document.getElementById("breakdown-body");
   const titleEl = document.getElementById("breakdown-title");
   if (!el) return;
@@ -236,28 +247,13 @@ export function renderBreakdown(calcResult, data, iconOverrides = {}) {
   }
 
   if (calcResult.mode === "elixirs") {
-    const { greenLine, blueLine } = formatExpectedOutput(
-      calcResult.expectedOutput
+    const scaled = scaleRecipeMaterials(
+      recipeWithSubstitutions(calcResult.recipePerCraft, data, prefs),
+      calcResult.crafts
     );
-    const outputText = blueLine ? `${greenLine} · ${blueLine}` : greenLine;
-    const rows = (calcResult.materials || [])
-      .map(
-        (m) =>
-          `<tr>
-            <td>${materialCell(m.marketId, m.name, iconOverrides)}${m.substitutedFrom ? `<div class="muted sub-hint">replaces ${m.substitutedFrom}</div>` : ""}</td>
-            <td class="num"><b>${m.qty.toLocaleString()}</b></td>
-          </tr>`
-      )
-      .join("");
-
     el.innerHTML = `
       <div class="breakdown-single">
-        <h3>${calcResult.elixirName}</h3>
-        <p class="muted">${calcResult.crafts.toLocaleString()} crafts → expect ${outputText}</p>
-        <table class="data-table gather-table">
-          <thead><tr><th>Material</th><th class="num">Total</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
+        ${renderMaterialTree(scaled, data, prefs, iconOverrides)}
       </div>
     `;
     return;
@@ -286,16 +282,18 @@ export function renderBreakdown(calcResult, data, iconOverrides = {}) {
           const slotLabel = isBlue
             ? '<p class="muted section-label">Simple Alchemy per blue</p>'
             : "";
-          const precraft =
-            !isBlue && e.precraftSteps?.length
-              ? `<p class="muted section-label">Precraft</p>${renderPrecraftSteps(e.precraftSteps, iconOverrides, { compact: true })}`
-              : "";
+          const scaled = scaleRecipeMaterials(
+            recipeWithSubstitutions(e.recipePerCraft, data, prefs),
+            e.alchemyCrafts
+          );
+          const materialTree = isBlue
+            ? renderAlchemySlots(e.recipePerCraft, iconOverrides, { compact: true })
+            : renderMaterialTree(scaled, data, prefs, iconOverrides);
           return `
           <details class="elixir-recipe">
             <summary class="breakdown-title-row">${elixirIcon} ${e.name} · ${summary}</summary>
             ${slotLabel}
-            ${renderAlchemySlots(e.recipePerCraft, iconOverrides, { compact: true })}
-            ${precraft}
+            ${materialTree}
           </details>`;
         })
         .join("");
@@ -371,7 +369,7 @@ export function renderShoppingList(calcResult, prices, sortBy = "cost", prefs = 
     } else if (prefs.craftIntermediates !== false) {
       noteEl.hidden = false;
       noteEl.textContent =
-        "Intermediates expanded — precraft oils/reagents yourself (see sidebar).";
+        "Intermediates expanded — expand craftable rows in breakdown for recipes.";
     } else {
       noteEl.hidden = true;
       noteEl.textContent = "";
@@ -429,6 +427,10 @@ export function renderMarketStatus(priceMeta, hasMissing, { loading = false } = 
     text += " · Arsha blocked";
   }
   if (hasMissing) text += " · some prices missing";
+  if (hasMissing) {
+    text +=
+      " · mushrooms/herbs use vendor prices · click Refresh if needed";
+  }
   el.textContent = text;
 }
 
@@ -475,7 +477,7 @@ export function setPanelVisibility(mode) {
 
   const titleEl = document.getElementById("breakdown-title");
   if (titleEl) {
-    if (mode === "elixirs") titleEl.textContent = "Materials to gather";
+    if (mode === "elixirs") titleEl.textContent = "Materials Needed";
     else if (mode === "party") titleEl.textContent = "Monster-Type Harmony Craft Breakdown";
     else titleEl.textContent = "Breakdown";
   }
