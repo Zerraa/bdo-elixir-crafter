@@ -26,6 +26,8 @@ let prices = {};
 let priceMeta = {
   updatedAt: null,
   fromCache: false,
+  fromStaticFallback: false,
+  usedBdmFallback: false,
   fetched: 0,
   failed: 0,
   total: 0,
@@ -153,6 +155,8 @@ function applyPriceResult(result, idCount = 0) {
   priceMeta = {
     updatedAt: result.updatedAt ?? priceMeta.updatedAt,
     fromCache: result.fromCache,
+    fromStaticFallback: result.fromStaticFallback ?? false,
+    usedBdmFallback: result.usedBdmFallback ?? false,
     fetched: result.fetched ?? 0,
     failed: result.failed ?? 0,
     total: result.total ?? idCount,

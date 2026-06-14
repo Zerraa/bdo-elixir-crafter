@@ -1,13 +1,17 @@
 const CACHE_KEY = "bdo_elixir_prices";
 const CACHE_TTL_MS = 15 * 60 * 1000;
 const API_BASE = "https://api.arsha.io/v1/eu/price";
-const CONCURRENCY = 3;
-const FETCH_DELAY_MS = 120;
+const BDM_BASE = "https://api.blackdesertmarket.com/item";
+const STATIC_CACHE_URL = "./data/price-cache.json";
+const CONCURRENCY = 1;
+const FETCH_DELAY_MS = 200;
 const FETCH_TIMEOUT_MS = 15_000;
 const MAX_RETRIES = 3;
-const POST_BATCH_SIZE = 25;
+const POST_BATCH_SIZE = 10;
 const IMPERVA_CODE = 103;
 const CLEAR_REAGENT_ID = 5301;
+
+let staticFallbackPromise = null;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -44,6 +48,35 @@ function writeCache(prices) {
   } catch {
     /* quota or private mode */
   }
+}
+
+async function loadStaticFallback() {
+  if (!staticFallbackPromise) {
+    staticFallbackPromise = (async () => {
+      try {
+        const res = await fetch(STATIC_CACHE_URL);
+        if (!res.ok) return { prices: {}, updatedAt: null };
+        const data = await res.json();
+        const prices = {};
+        for (const [id, entry] of Object.entries(data?.prices || {})) {
+          if (entry?.basePrice != null) {
+            prices[String(id)] = {
+              id: entry.id ?? Number(id),
+              name: entry.name,
+              basePrice: entry.basePrice,
+            };
+          }
+        }
+        const updatedAt = data?.updatedAt
+          ? Date.parse(data.updatedAt) || null
+          : null;
+        return { prices, updatedAt };
+      } catch {
+        return { prices: {}, updatedAt: null };
+      }
+    })();
+  }
+  return staticFallbackPromise;
 }
 
 function isImpervaError(data) {
@@ -122,12 +155,53 @@ async function fetchOne(id) {
   throw lastError;
 }
 
+async function fetchBdmOne(id) {
+  const url = `${BDM_BASE}/${id}?region=eu`;
+  const res = await fetch(url, {
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
+  if (!res.ok) return null;
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    return null;
+  }
+  const item = data?.data?.[0];
+  if (!item || item.basePrice == null) return null;
+  return { id: item.id, name: item.name, basePrice: item.basePrice };
+}
+
+async function fetchBdmBatch(ids) {
+  const prices = {};
+  let fetched = 0;
+  let failed = 0;
+
+  for (const id of ids) {
+    try {
+      const entry = await fetchBdmOne(id);
+      if (entry?.basePrice != null) {
+        prices[String(id)] = entry;
+        fetched++;
+      } else {
+        failed++;
+      }
+    } catch {
+      failed++;
+    }
+    if (ids.indexOf(id) < ids.length - 1) await sleep(FETCH_DELAY_MS);
+  }
+
+  return { prices, fetched, failed };
+}
+
 async function fetchBatch(ids) {
   const unique = [...new Set(ids.filter(Boolean))];
   const prices = {};
   let fetched = 0;
   let failed = 0;
   let impervaBlocked = false;
+  let usedBdmFallback = false;
   const pending = new Set(unique);
 
   for (let i = 0; i < unique.length; i += POST_BATCH_SIZE) {
@@ -157,6 +231,7 @@ async function fetchBatch(ids) {
         const result = await fetchOne(id);
         if (result?.basePrice != null) {
           prices[String(id)] = result;
+          pending.delete(id);
           fetched++;
         } else {
           failed++;
@@ -177,18 +252,40 @@ async function fetchBatch(ids) {
     await Promise.all(workers);
   }
 
+  const stillMissing = unique.filter(
+    (id) => prices[String(id)]?.basePrice == null
+  );
+  if (stillMissing.length) {
+    const bdm = await fetchBdmBatch(stillMissing);
+    usedBdmFallback = bdm.fetched > 0;
+    for (const [id, entry] of Object.entries(bdm.prices)) {
+      if (entry?.basePrice != null) {
+        prices[String(id)] = entry;
+        fetched++;
+        failed = Math.max(0, failed - 1);
+      }
+    }
+  }
+
   return {
     prices,
     fetched,
     failed,
     total: unique.length,
     impervaBlocked,
+    usedBdmFallback,
     apiUnavailable: false,
   };
 }
 
 function countCovered(ids, priceMap) {
   return ids.filter((id) => priceMap[String(id)]?.basePrice != null).length;
+}
+
+function mergePrices(target, source) {
+  for (const [id, entry] of Object.entries(source || {})) {
+    if (entry?.basePrice != null) target[String(id)] = entry;
+  }
 }
 
 export function getUnitPrice(item, prices, prefs = {}) {
@@ -245,37 +342,35 @@ export async function loadPrices(ids, { force = false } = {}) {
     };
   }
 
+  const cached = readCache();
+  const staticFallback = await loadStaticFallback();
+  const merged = {};
+  mergePrices(merged, cached?.prices);
+  mergePrices(merged, staticFallback.prices);
+
+  let fromStaticFallback = false;
+  const staticOnlyCount = countCovered(unique, staticFallback.prices);
+  if (staticOnlyCount > 0) fromStaticFallback = true;
+
   if (!force) {
-    const cached = readCache();
-    if (cached) {
-      const hasAll = unique.every(
-        (id) =>
-          cached.prices[String(id)]?.basePrice != null ||
-          cached.prices[id]?.basePrice != null
-      );
-      if (hasAll) {
-        return {
-          prices: cached.prices,
-          updatedAt: cached.timestamp,
-          fromCache: true,
-          fetched: unique.length,
-          failed: 0,
-          total: unique.length,
-        };
-      }
+    const hasAll = unique.every(
+      (id) => merged[String(id)]?.basePrice != null
+    );
+    if (hasAll) {
+      return {
+        prices: merged,
+        updatedAt: cached?.timestamp ?? staticFallback.updatedAt ?? Date.now(),
+        fromCache: Boolean(cached),
+        fromStaticFallback,
+        fetched: unique.length,
+        failed: 0,
+        total: unique.length,
+      };
     }
   }
 
-  const cached = readCache();
-  const merged = {};
-  for (const [id, entry] of Object.entries(cached?.prices || {})) {
-    if (entry?.basePrice != null) merged[String(id)] = entry;
-  }
-
   const batch = await fetchBatch(unique);
-  for (const [id, entry] of Object.entries(batch.prices)) {
-    if (entry?.basePrice != null) merged[String(id)] = entry;
-  }
+  mergePrices(merged, batch.prices);
   writeCache(merged);
 
   const covered = countCovered(unique, merged);
@@ -284,8 +379,12 @@ export async function loadPrices(ids, { force = false } = {}) {
 
   return {
     prices: merged,
-    updatedAt: fromLive ? Date.now() : cached?.timestamp ?? Date.now(),
-    fromCache: !fromLive && covered > 0,
+    updatedAt: fromLive
+      ? Date.now()
+      : cached?.timestamp ?? staticFallback.updatedAt ?? Date.now(),
+    fromCache: !fromLive && covered > 0 && Boolean(cached),
+    fromStaticFallback: !fromLive && covered > 0 && fromStaticFallback,
+    usedBdmFallback: batch.usedBdmFallback,
     fetched: fromLive ? liveFetch : covered,
     failed: fromLive ? batch.failed : Math.max(0, unique.length - covered),
     total: unique.length,

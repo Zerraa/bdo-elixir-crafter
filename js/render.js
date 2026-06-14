@@ -356,23 +356,33 @@ export function renderMarketStatus(priceMeta, hasMissing, { loading = false } = 
     return;
   }
 
-  const { updatedAt, fromCache, fetched, failed, total, apiUnavailable } =
-    priceMeta;
+  const {
+    updatedAt,
+    fromCache,
+    fromStaticFallback,
+    usedBdmFallback,
+    fetched,
+    failed,
+    total,
+    apiUnavailable,
+  } = priceMeta;
 
   if (apiUnavailable && hasMissing) {
     el.textContent =
-      "EU · CM API unavailable (Imperva) · no cached prices — try Refresh later";
+      "EU · market APIs unavailable · no prices loaded — try Refresh later";
     return;
   }
 
   let text = `EU · ${formatTime(updatedAt)}`;
   if (fromCache) text += " · cached";
+  else if (fromStaticFallback) text += " · bundled cache";
+  if (usedBdmFallback) text += " · fallback API";
   if (total > 0 && fetched != null) {
     text += ` · ${fetched}/${total} prices`;
     if (failed > 0) text += ` · ${failed} failed`;
   }
   if (priceMeta.impervaBlocked && fetched < total) {
-    text += " · CM API blocked (Imperva)";
+    text += " · Arsha blocked";
   }
   if (hasMissing) text += " · some prices missing";
   el.textContent = text;

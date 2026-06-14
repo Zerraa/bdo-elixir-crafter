@@ -1,0 +1,72 @@
+{
+  "region": "eu",
+  "source": "api.blackdesertmarket.com",
+  "updatedAt": "2026-06-14T15:35:14.340Z",
+  "prices": {
+    "690": {
+      "id": 690,
+      "name": "Elixir of Swiftness",
+      "basePrice": 67000
+    },
+    "691": {
+      "id": 691,
+      "name": "Elixir of Intrepid Swiftness",
+      "basePrice": 178000
+    },
+    "692": {
+      "id": 692,
+      "name": "Elixir of Spells",
+      "basePrice": 78000
+    },
+    "693": {
+      "id": 693,
+      "name": "Elixir of Agile Spells",
+      "basePrice": 185000
+    },
+    "696": {
+      "id": 696,
+      "name": "Elixir of Assassination",
+      "basePrice": 135000
+    },
+    "697": {
+      "id": 697,
+      "name": "Elixir of Lethal Assassin",
+      "basePrice": 610000
+    },
+    "698": {
+      "id": 698,
+      "name": "Elixir of Detection",
+      "basePrice": 461000
+    },
+    "699": {
+      "id": 699,
+      "name": "Elixir of Sharp Detection",
+      "basePrice": 1430000
+    },
+    "700": {
+      "id": 700,
+      "name": "Elixir of Concentration",
+      "basePrice": 51500
+    },
+    "701": {
+      "id": 701,
+      "name": "Elixir of Advanced Concentration",
+      "basePrice": 108000
+    },
+    "702": {
+      "id": 702,
+      "name": "Elixir of Will",
+      "basePrice": 67000
+    },
+    "704": {
+      "id": 704,
+      "name": "Elixir of Fury",
+      "basePrice": 61000
+    },
+    "5401": {
+      "id": 5401,
+      "name": "Sunrise Herb",
+      "basePrice": 387
+    }
+  }
+}
