@@ -69,17 +69,18 @@ function renderMaterialTreeNodes(nodes, iconOverrides, depth = 0) {
           depth + 1
         );
         return `
-        <details class="breakdown-branch">
+        <details class="breakdown-branch breakdown-branch--depth-${Math.min(depth, 3)}">
           <summary class="breakdown-line breakdown-line--parent${depthClass}">
+            <span class="breakdown-chevron" aria-hidden="true"></span>
             ${renderMaterialCol(node, iconOverrides)}
             <div class="breakdown-qty-col">${node.qty.toLocaleString()}</div>
           </summary>
-          <div class="breakdown-sublist">${nested}</div>
+          <div class="breakdown-branch-body">${nested}</div>
         </details>`;
       }
 
       return `
-        <div class="breakdown-line${depthClass}">
+        <div class="breakdown-line breakdown-line--leaf${depthClass}">
           ${renderMaterialCol(node, iconOverrides)}
           <div class="breakdown-qty-col">${node.qty.toLocaleString()}</div>
         </div>`;
