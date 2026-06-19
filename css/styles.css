@@ -881,16 +881,16 @@ a:hover {
 }
 
 .breakdown-line--depth-1 {
-  --breakdown-indent: 12px;
+  --breakdown-indent: 8px;
 }
 
 .breakdown-line--depth-2 {
-  --breakdown-indent: 24px;
+  --breakdown-indent: 16px;
 }
 
 .breakdown-line--depth-3,
 .breakdown-line--depth-4 {
-  --breakdown-indent: 36px;
+  --breakdown-indent: 24px;
 }
 
 .breakdown-branch {
@@ -902,25 +902,30 @@ a:hover {
 }
 
 .breakdown-branch--depth-1 {
-  margin-left: 8px;
+  margin-left: 12px;
 }
 
 .breakdown-branch--depth-2 {
-  margin-left: 16px;
+  margin-left: 20px;
 }
 
 .breakdown-branch--depth-3 {
-  margin-left: 24px;
+  margin-left: 28px;
 }
 
 .breakdown-line--parent {
-  grid-template-columns: 1.1em 1fr 5.5rem;
+  grid-template-columns: 1.5em 1fr 5.5rem;
+  align-items: center;
   background: rgba(255, 255, 255, 0.05);
   cursor: pointer;
 }
 
 .breakdown-line--parent:hover {
   background: rgba(255, 255, 255, 0.08);
+}
+
+.breakdown-line--leaf {
+  align-items: start;
 }
 
 .breakdown-branch > summary {
@@ -935,14 +940,18 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  align-self: center;
   color: var(--text);
-  font-size: 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 700;
   line-height: 1;
-  margin-top: 3px;
+  width: 1.5em;
+  height: 1.5em;
 }
 
 .breakdown-chevron::before {
-  content: "▸";
+  content: "›";
+  display: block;
   transition: transform 0.15s ease;
 }
 
@@ -953,6 +962,7 @@ a:hover {
 .breakdown-branch-body {
   border-top: 1px solid #333;
   background: rgba(0, 0, 0, 0.15);
+  padding-left: 28px;
 }
 
 .breakdown-branch-body > .breakdown-line--leaf,
@@ -961,7 +971,7 @@ a:hover {
 }
 
 .breakdown-branch-body > .breakdown-line--leaf {
-  padding-left: calc(10px + var(--breakdown-indent, 0px));
+  padding-left: calc(8px + var(--breakdown-indent, 0px));
   border-bottom: 1px solid #2a2a2a;
 }
 
@@ -978,7 +988,7 @@ a:hover {
 }
 
 .breakdown-branch-body > .breakdown-branch > summary.breakdown-line--parent {
-  padding-left: calc(10px + var(--breakdown-indent, 0px));
+  padding-left: calc(8px + var(--breakdown-indent, 0px));
 }
 
 .alchemy-slots {
