@@ -82,40 +82,6 @@ node scripts/update-price-cache.mjs
 
 **Automatically** — a GitHub Actions workflow (`.github/workflows/update-price-cache.yml`) runs weekly and on manual dispatch. It fetches EU prices via [Black Desert Market API](https://api.blackdesertmarket.com), updates `data/price-cache.json`, and commits the result so GitHub Pages deployments stay reasonably fresh when client-side APIs are blocked.
 
-To run it manually: **Actions → Update price cache → Run workflow**.
-
-## Deploy to GitHub Pages
-
-1. Push this repo to GitHub.
-2. **Settings → Pages → Build and deployment**
-3. Source: **Deploy from a branch**, branch `main`, folder **/ (root)**
-
-The site works as a static site; no build command required. Enable the weekly price-cache workflow so fallback prices update after deploy.
-
-## Project structure
-
-```
-index.html              App shell
-css/styles.css          Layout and theme
-js/
-  app.js                UI wiring and price refresh
-  calculator.js         Craft math and material aggregation
-  expand.js             Intermediate recipe expansion
-  prices.js             EU price fetch, cache, vendor overrides
-  render.js             DOM rendering
-  session.js            localStorage persistence
-  icons.js              BDO Codex icon URLs
-data/
-  crafting.json         Elixir recipes, draught groups, party harmonies
-  intermediates.json    Oil, reagent, and water sub-recipes
-  marketIds.json        Item ID reference
-  price-cache.json      Bundled EU price fallback
-scripts/
-  update-price-cache.mjs  Regenerate price-cache.json
-.github/workflows/
-  update-price-cache.yml  Weekly automated cache refresh
-```
-
 ## Data sources
 
 - Recipes and item IDs: [BDO Codex](https://bdocodex.com/us/)
