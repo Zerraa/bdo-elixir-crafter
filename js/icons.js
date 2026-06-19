@@ -1,10 +1,5 @@
 const CODEX_BASE = "https://bdocodex.com/items/new_icon";
 
-/** Optional bundled icons (run `node scripts/fetch-item-icons.mjs` to populate). */
-const LOCAL_ICON_FALLBACKS = {
-  5301: "./icons/5301.png",
-};
-
 const CONSUMABLE_POTION_IDS = new Set([517, 518]);
 
 function codexIconFile(marketId) {
@@ -17,21 +12,8 @@ function potionIconUrl(marketId) {
   return `${CODEX_BASE}/03_etc/08_potion/${codexIconFile(marketId)}.webp`;
 }
 
-function productMaterialIconUrl(marketId, ext = "webp") {
-  return `${CODEX_BASE}/03_etc/07_productmaterial/${codexIconFile(marketId)}.${ext}`;
-}
-
-function materialIconCandidates(marketId) {
-  const file = codexIconFile(marketId);
-  const folders = ["07_productmaterial", "08_potion"];
-  const exts = ["webp", "png"];
-  const urls = [];
-  for (const folder of folders) {
-    for (const ext of exts) {
-      urls.push(`${CODEX_BASE}/03_etc/${folder}/${file}.${ext}`);
-    }
-  }
-  return urls;
+function productMaterialIconUrl(marketId) {
+  return `${CODEX_BASE}/03_etc/07_productmaterial/${codexIconFile(marketId)}.webp`;
 }
 
 function isConsumablePotion(marketId) {
@@ -39,11 +21,7 @@ function isConsumablePotion(marketId) {
 }
 
 export function buildIconOverrides(data) {
-  const overrides = {};
-
-  for (const [id, url] of Object.entries(data?.iconOverrides || {})) {
-    if (url) overrides[String(id)] = url;
-  }
+  const overrides = { ...(data?.iconOverrides || {}) };
 
   for (const id of data?.potionMarketIds || []) {
     overrides[String(id)] = potionIconUrl(id);
@@ -97,28 +75,18 @@ export function buildIconOverrides(data) {
 export function itemIconUrlCandidates(marketId, overrides = {}) {
   if (marketId == null) return [];
   const key = String(marketId);
-  let candidates;
-  if (overrides[key]) {
-    const primary = overrides[key];
-    const rest = materialIconCandidates(marketId).filter((url) => url !== primary);
-    candidates = [primary, ...rest];
-  } else if (isConsumablePotion(marketId)) {
-    const file = codexIconFile(marketId);
-    candidates = [
+  if (overrides[key]) return [overrides[key]];
+  const file = codexIconFile(marketId);
+  if (isConsumablePotion(marketId)) {
+    return [
       `${CODEX_BASE}/03_etc/08_potion/${file}.webp`,
-      `${CODEX_BASE}/03_etc/08_potion/${file}.png`,
       `${CODEX_BASE}/03_etc/07_productmaterial/${file}.webp`,
-      `${CODEX_BASE}/03_etc/07_productmaterial/${file}.png`,
     ];
-  } else {
-    candidates = materialIconCandidates(marketId);
   }
-
-  const local = LOCAL_ICON_FALLBACKS[key];
-  if (local && !candidates.includes(local)) {
-    candidates.push(local);
-  }
-  return candidates;
+  return [
+    `${CODEX_BASE}/03_etc/07_productmaterial/${file}.webp`,
+    `${CODEX_BASE}/03_etc/08_potion/${file}.webp`,
+  ];
 }
 
 export function itemIconUrl(marketId, overrides = {}) {
@@ -143,7 +111,7 @@ export function itemIconImg(marketId, name, overrides, { size = 24, className = 
       ? ` data-fallbacks="${escapeAttr(fallbacks.join("|"))}" data-i="0" onerror="var s=this.dataset.fallbacks.split('|');var i=+this.dataset.i+1;if(i<s.length){this.dataset.i=i;this.src=s[i]}else{this.onerror=null}"`
       : "";
 
-  return `<img src="${escapeAttr(first)}" alt="" width="${size}" height="${size}" class="${className}" loading="lazy" decoding="async" referrerpolicy="strict-origin-when-cross-origin" title="${escapeAttr(name || "")}"${fallbackAttr}>`;
+  return `<img src="${escapeAttr(first)}" alt="" width="${size}" height="${size}" class="${className}" loading="lazy" decoding="async" referrerpolicy="no-referrer" title="${escapeAttr(name || "")}"${fallbackAttr}>`;
 }
 
 export function materialCell(marketId, name, overrides, { link = true, showIcon = true } = {}) {

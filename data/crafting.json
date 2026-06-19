@@ -121,9 +121,6 @@
       "output": 10
     }
   },
-  "iconOverrides": {
-    "5301": "./icons/5301.png"
-  },
   "substitutions": {
     "Bear Blood": {
       "pref": "useLionForBear",
@@ -178,7 +175,6 @@
   "freeReagents": {
     "Clear Liquid Reagent": {
       "marketId": 5301,
-      "iconUrl": "./icons/5301.png",
       "priceSource": "Free (Mysterious Catalyst exchange)"
     }
   },
@@ -218,10 +214,6 @@
     }
   },
   "vendorPrices": {
-    "517": {
-      "price": 51,
-      "source": "Material Vendor"
-    },
     "5402": {
       "price": 575,
       "source": "Herb Vendor"
@@ -289,6 +281,10 @@
     "9002": {
       "price": 20,
       "source": "Food Vendor"
+    },
+    "517": {
+      "price": 51,
+      "source": "Material Vendor"
     },
     "16101": {
       "price": 50,
