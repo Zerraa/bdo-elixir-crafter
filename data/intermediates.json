@@ -7,12 +7,6 @@
       { "name": "Red Tree Lump", "marketId": 5011, "qty": 1 },
       { "name": "Fruit of Nature", "marketId": 5205, "qty": 1 },
       { "name": "Powder of Rifts", "marketId": 4803, "qty": 1 }
-    ],
-    "alternatives": [
-      {
-        "slotIndex": 1,
-        "or": { "name": "Everlasting Herb", "marketId": 5406, "qty": 1 }
-      }
     ]
   },
   "6602": {
@@ -63,8 +57,7 @@
       { "name": "Lizard Blood", "marketId": 6208, "qty": 2 },
       { "name": "Trace of Nature", "marketId": 5960, "qty": 1 },
       { "name": "Spirit's Leaf", "marketId": 5006, "qty": 1 }
-    ],
-    "note": "Lizard Blood slot: any Blood group 5 (Lizard ×2, or 1× Bat/Cobra/Kuku Bird/Worm Blood — worth 2 each)."
+    ]
   },
   "6352": {
     "name": "Tyrant's Blood",
@@ -161,10 +154,6 @@
     ],
     "alternatives": [
       {
-        "slotIndex": 0,
-        "or": { "name": "Sun-dried Salt", "marketId": 9003, "qty": 1 }
-      },
-      {
         "slotIndex": 3,
         "or": { "name": "Weeds", "marketId": 5600, "qty": 1 }
       }
@@ -172,12 +161,7 @@
   },
   "6656": {
     "name": "Purified Water",
-    "marketId": 6656,
-    "method": "Filter",
-    "note": "Filter bottled water. Yield increases with Processing level (up to ~2.5 per bottle at Artisan).",
-    "materials": [
-      { "name": "Bottle of River Water", "marketId": 6653, "qty": 1 }
-    ]
+    "marketId": 6656
   },
   "517": {
     "name": "HP Potion (Small)",
@@ -186,32 +170,26 @@
   },
   "4801": {
     "name": "Powder of Darkness",
-    "marketId": 4801,
-    "note": "Mining nodes (small chance from rocks) or Central Market."
+    "marketId": 4801
   },
   "4802": {
     "name": "Powder of Flame",
-    "marketId": 4802,
-    "note": "Mining nodes (small chance from rocks) or Central Market."
+    "marketId": 4802
   },
   "4803": {
     "name": "Powder of Rifts",
-    "marketId": 4803,
-    "note": "Mining nodes (small chance from rocks) or Central Market."
+    "marketId": 4803
   },
   "4804": {
     "name": "Powder of Earth",
-    "marketId": 4804,
-    "note": "Mining nodes (small chance from rocks) or Central Market."
+    "marketId": 4804
   },
   "4805": {
     "name": "Powder of Time",
-    "marketId": 4805,
-    "note": "Mining nodes (small chance from rocks) or Central Market."
+    "marketId": 4805
   },
   "5205": {
     "name": "Fruit of Nature",
-    "marketId": 5205,
-    "note": "Farming secondary or Central Market."
+    "marketId": 5205
   }
 }

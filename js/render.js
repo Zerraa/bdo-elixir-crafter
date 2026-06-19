@@ -70,7 +70,7 @@ function renderMaterialTreeNodes(nodes, iconOverrides, depth = 0) {
         );
         return `
         <details class="breakdown-branch">
-          <summary class="breakdown-line${depthClass}">
+          <summary class="breakdown-line breakdown-line--parent${depthClass}">
             ${renderMaterialCol(node, iconOverrides)}
             <div class="breakdown-qty-col">${node.qty.toLocaleString()}</div>
           </summary>
