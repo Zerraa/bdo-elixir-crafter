@@ -328,6 +328,10 @@ export function collectMarketIds(calcResult) {
   return [...ids];
 }
 
+export async function bootstrapStaticPrices() {
+  return loadStaticFallback();
+}
+
 export async function loadPrices(ids, { force = false } = {}) {
   const unique = [...new Set(ids.filter(Boolean))];
   if (!unique.length) {

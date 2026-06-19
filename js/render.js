@@ -215,6 +215,40 @@ export function renderStats(calcResult, costInfo) {
   }
 }
 
+export function renderAppLoading(loading) {
+  const breakdown = document.getElementById("breakdown-body");
+  const stats = document.getElementById("stats");
+  const shopping = document.getElementById("shopping-body");
+  const status = document.getElementById("market-status");
+
+  const disabled = loading;
+  for (const id of [
+    "elixir-select",
+    "elixir-crafts",
+    "harmony-crafts",
+    "party-crafts",
+    "draught-green",
+    "draught-blue",
+    "sort-select",
+  ]) {
+    const el = document.getElementById(id);
+    if (el) el.disabled = disabled;
+  }
+
+  if (loading) {
+    if (breakdown) {
+      breakdown.innerHTML =
+        '<p class="muted breakdown-loading">Loading recipes…</p>';
+    }
+    if (stats) stats.innerHTML = "";
+    if (shopping) {
+      shopping.innerHTML =
+        '<tr><td colspan="4" class="muted">Loading…</td></tr>';
+    }
+    if (status) status.textContent = "Loading recipes…";
+  }
+}
+
 export function renderBreakdown(calcResult, data, prefs = {}, iconOverrides = {}) {
   const el = document.getElementById("breakdown-body");
   const titleEl = document.getElementById("breakdown-title");

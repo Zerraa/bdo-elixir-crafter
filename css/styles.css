@@ -411,6 +411,11 @@ a:hover {
   font-size: 0.85rem;
 }
 
+.breakdown-loading {
+  padding: 24px 10px;
+  text-align: center;
+}
+
 .radio-row--stack {
   flex-direction: column;
   align-items: flex-start;

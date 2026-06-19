@@ -1,6 +1,7 @@
 import { calcElixirsOnly, calcFullChain, calcPartyHarmony } from "./calculator.js";
 import {
   loadPrices,
+  bootstrapStaticPrices,
   collectMarketIds,
   collectCompareMarketIds,
   collectFullCraftMarketIds,
@@ -14,6 +15,7 @@ import {
   renderShoppingList,
   renderMarketStatus,
   renderCompare,
+  renderAppLoading,
   populateElixirSelect,
   populatePartyVariants,
   setPanelVisibility,
@@ -56,6 +58,8 @@ const state = {
 
 let compareOpen = false;
 let refreshInFlight = false;
+let pendingPriceRefresh = false;
+let pendingPriceForce = false;
 
 function getPrefs() {
   return {
@@ -147,13 +151,33 @@ function applyStateToUI() {
   setPanelVisibility(state.mode);
 }
 
+function mergeBootstrapPrices(staticBundle) {
+  if (!staticBundle?.prices) return;
+  for (const [id, entry] of Object.entries(staticBundle.prices)) {
+    if (entry?.basePrice != null) {
+      prices[String(id)] = entry;
+    }
+  }
+  if (staticBundle.updatedAt) {
+    priceMeta.updatedAt = staticBundle.updatedAt;
+  }
+  priceMeta.fromStaticFallback = true;
+}
+
 async function loadCraftingData() {
-  const [craftRes, intRes] = await Promise.all([
+  const [craftRes, intRes, staticBundle] = await Promise.all([
     fetch("./data/crafting.json"),
     fetch("./data/intermediates.json"),
+    bootstrapStaticPrices(),
   ]);
+
+  if (!craftRes.ok || !intRes.ok) {
+    throw new Error("Failed to load recipe data");
+  }
+
   craftingData = await craftRes.json();
   craftingData.intermediates = await intRes.json();
+  mergeBootstrapPrices(staticBundle);
 
   Object.assign(state, loadSession(craftingData));
 
@@ -162,6 +186,8 @@ async function loadCraftingData() {
 }
 
 function getCalcResult() {
+  if (!craftingData) return null;
+
   const prefs = getPrefs();
 
   if (state.mode === "elixirs") {
@@ -195,7 +221,7 @@ function applyPriceResult(result, idCount = 0) {
   priceMeta = {
     updatedAt: result.updatedAt ?? priceMeta.updatedAt,
     fromCache: result.fromCache,
-    fromStaticFallback: result.fromStaticFallback ?? false,
+    fromStaticFallback: result.fromStaticFallback ?? priceMeta.fromStaticFallback,
     usedBdmFallback: result.usedBdmFallback ?? false,
     fetched: result.fetched ?? 0,
     failed: result.failed ?? 0,
@@ -214,15 +240,22 @@ function setRefreshing(loading) {
 }
 
 async function refreshPrices(force = false) {
-  if (refreshInFlight) return;
+  if (!craftingData) return;
+
+  if (refreshInFlight) {
+    pendingPriceRefresh = true;
+    pendingPriceForce = pendingPriceForce || force;
+    return;
+  }
 
   const calc = getCalcResult();
+  if (!calc) return;
+
   const ids = compareOpen
     ? collectAllComparePriceIds(calc)
     : collectMarketIds(calc);
 
   setRefreshing(true);
-  renderAll();
 
   try {
     const result = await loadPrices(ids, { force });
@@ -230,13 +263,22 @@ async function refreshPrices(force = false) {
   } finally {
     setRefreshing(false);
     renderAll();
+
+    if (pendingPriceRefresh) {
+      const nextForce = pendingPriceForce;
+      pendingPriceRefresh = false;
+      pendingPriceForce = false;
+      await refreshPrices(nextForce);
+    }
   }
 }
 
 async function syncCompare() {
-  if (refreshInFlight) return;
+  if (!craftingData || refreshInFlight) return;
 
   const calc = getCalcResult();
+  if (!calc) return;
+
   const allIds = collectAllComparePriceIds(calc);
   const missing = allIds.filter(
     (id) =>
@@ -244,7 +286,6 @@ async function syncCompare() {
   );
 
   setRefreshing(true);
-  renderAll();
 
   try {
     if (missing.length) {
@@ -282,7 +323,11 @@ async function openCompareModal() {
 }
 
 function renderAll() {
+  if (!craftingData) return;
+
   const calc = getCalcResult();
+  if (!calc) return;
+
   const prefs = getPrefs();
   const iconOverrides = buildIconOverrides(craftingData);
   const gradeMode = calc.mode === "harmony" ? calc.gradeMode : "green";
@@ -303,6 +348,11 @@ function renderAll() {
   });
 }
 
+function updateMaterialsAndPrices() {
+  renderAll();
+  refreshPrices();
+}
+
 function bindModeTabs() {
   document.querySelectorAll("[data-mode]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -312,7 +362,7 @@ function bindModeTabs() {
         .forEach((b) => b.classList.toggle("active", b === btn));
       setPanelVisibility(state.mode);
       persistSession(state);
-      refreshPrices();
+      updateMaterialsAndPrices();
     });
   });
 }
@@ -322,12 +372,14 @@ function bindElixirInputs() {
   const crafts = document.getElementById("elixir-crafts");
 
   select.addEventListener("change", () => {
+    if (!craftingData) return;
     state.elixirName = select.value;
     persistSession(state);
-    refreshPrices();
+    updateMaterialsAndPrices();
   });
 
   crafts.addEventListener("input", () => {
+    if (!craftingData) return;
     state.elixirCrafts = parseInt(crafts.value, 10) || 0;
     persistSession(state);
     renderAll();
@@ -335,6 +387,7 @@ function bindElixirInputs() {
 
   document.querySelectorAll("[data-elixir-preset]").forEach((chip) => {
     chip.addEventListener("click", () => {
+      if (!craftingData) return;
       const val = parseInt(chip.dataset.elixirPreset, 10);
       crafts.value = val;
       state.elixirCrafts = val;
@@ -350,29 +403,29 @@ function bindHarmonyInputs() {
   const blue = document.getElementById("draught-blue");
 
   crafts.addEventListener("input", () => {
+    if (!craftingData) return;
     state.harmonyCrafts = parseInt(crafts.value, 10) || 0;
     persistSession(state);
     renderAll();
   });
 
   green.addEventListener("change", () => {
-    if (green.checked) {
-      state.draughtGrade = "green";
-      persistSession(state);
-      refreshPrices();
-    }
+    if (!craftingData || !green.checked) return;
+    state.draughtGrade = "green";
+    persistSession(state);
+    updateMaterialsAndPrices();
   });
 
   blue.addEventListener("change", () => {
-    if (blue.checked) {
-      state.draughtGrade = "blue";
-      persistSession(state);
-      refreshPrices();
-    }
+    if (!craftingData || !blue.checked) return;
+    state.draughtGrade = "blue";
+    persistSession(state);
+    updateMaterialsAndPrices();
   });
 
   document.querySelectorAll("[data-harmony-preset]").forEach((chip) => {
     chip.addEventListener("click", () => {
+      if (!craftingData) return;
       const val = parseInt(chip.dataset.harmonyPreset, 10);
       crafts.value = val;
       state.harmonyCrafts = val;
@@ -385,11 +438,10 @@ function bindHarmonyInputs() {
 function bindPartyVariantRadios() {
   document.querySelectorAll("[data-party-variant]").forEach((radio) => {
     radio.addEventListener("change", () => {
-      if (radio.checked) {
-        state.partyVariant = radio.value;
-        persistSession(state);
-        refreshPrices();
-      }
+      if (!craftingData || !radio.checked) return;
+      state.partyVariant = radio.value;
+      persistSession(state);
+      updateMaterialsAndPrices();
     });
   });
 }
@@ -399,6 +451,7 @@ function bindPartyInputs() {
   if (!crafts) return;
 
   crafts.addEventListener("input", () => {
+    if (!craftingData) return;
     state.partyCount = parseInt(crafts.value, 10) || 0;
     persistSession(state);
     renderAll();
@@ -452,35 +505,39 @@ function bindCompare() {
 function bindPrefs() {
   const lionForBear = document.getElementById("lion-for-bear");
   lionForBear.addEventListener("change", () => {
+    if (!craftingData) return;
     state.useLionForBear = lionForBear.checked;
     persistSession(state);
-    refreshPrices();
+    updateMaterialsAndPrices();
   });
 
   const ignoreClear = document.getElementById("ignore-clear-reagent");
   if (ignoreClear) {
     ignoreClear.addEventListener("change", () => {
+      if (!craftingData) return;
       state.ignoreClearReagent = ignoreClear.checked;
       persistSession(state);
-      refreshPrices();
+      updateMaterialsAndPrices();
     });
   }
 
   const craftIntermediates = document.getElementById("craft-intermediates");
   if (craftIntermediates) {
     craftIntermediates.addEventListener("change", () => {
+      if (!craftingData) return;
       state.craftIntermediates = craftIntermediates.checked;
       persistSession(state);
-      refreshPrices();
+      updateMaterialsAndPrices();
     });
   }
 
   const weedsForWildGrass = document.getElementById("weeds-for-wild-grass");
   if (weedsForWildGrass) {
     weedsForWildGrass.addEventListener("change", () => {
+      if (!craftingData) return;
       state.useWeedsForWildGrass = weedsForWildGrass.checked;
       persistSession(state);
-      refreshPrices();
+      updateMaterialsAndPrices();
     });
   }
 
@@ -495,17 +552,15 @@ function bindPrefs() {
     const el = document.getElementById(id);
     if (!el) continue;
     el.addEventListener("change", () => {
+      if (!craftingData) return;
       state[key] = el.checked;
       persistSession(state);
-      refreshPrices();
+      updateMaterialsAndPrices();
     });
   }
 }
 
-async function init() {
-  await loadCraftingData();
-  applyStateToUI();
-
+function bindAll() {
   bindModeTabs();
   bindElixirInputs();
   bindHarmonyInputs();
@@ -514,12 +569,23 @@ async function init() {
   bindSort();
   bindRefresh();
   bindCompare();
-
-  await refreshPrices();
 }
 
-init().catch((err) => {
-  console.error(err);
-  document.getElementById("market-status").textContent =
-    "Failed to load — run via a local server (see README)";
-});
+async function init() {
+  renderAppLoading(true);
+  bindAll();
+
+  try {
+    await loadCraftingData();
+    applyStateToUI();
+    renderAppLoading(false);
+    renderAll();
+    refreshPrices();
+  } catch (err) {
+    console.error(err);
+    document.getElementById("market-status").textContent =
+      "Failed to load — run via a local server (see README)";
+  }
+}
+
+init();
