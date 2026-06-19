@@ -236,7 +236,7 @@ function setRefreshing(loading) {
   const btn = document.getElementById("refresh-btn");
   if (!btn) return;
   btn.disabled = loading;
-  btn.textContent = loading ? "Refreshing…" : "Refresh";
+  btn.textContent = loading ? "Refreshing EU Prices…" : "Refresh EU Prices";
 }
 
 async function refreshPrices(force = false) {
