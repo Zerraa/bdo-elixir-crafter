@@ -6,6 +6,7 @@ import {
   computeTotalCost,
   getUnitPrice,
   computeCompare,
+  computeCraftOrder,
 } from "./prices.js";
 import { itemIconImg, materialCell } from "./icons.js";
 
@@ -624,6 +625,72 @@ export function renderCompare(calcResult, prices, craftingData, priceMeta = {}, 
       ${formatCompareSide(craft, { label: "Craft", showUnit: false })}
     </div>
     ${savingsHtml}
+  `;
+}
+
+export function renderCraftOrder(
+  perCraftResults,
+  prices,
+  craftingData,
+  { loading = false, selectedElixir = null, ...prefs } = {}
+) {
+  const body = document.getElementById("craft-order-body");
+  const syncEl = document.getElementById("craft-order-sync-status");
+  if (!body) return;
+
+  if (syncEl) {
+    syncEl.textContent = loading ? "Refreshing prices…" : "";
+  }
+
+  const { rows, greensPerCraft } = computeCraftOrder(
+    perCraftResults,
+    prices,
+    craftingData,
+    prefs
+  );
+  const iconOverrides = prefs.iconOverrides || {};
+  const anyMissing = rows.some((r) => r.hasMissing);
+
+  const tableRows = rows
+    .map((row, i) => {
+      const missing = row.hasMissing ? "*" : "";
+      const margin =
+        row.marketPrice != null && !row.hasMissing
+          ? row.marketPrice - row.costPerGreen
+          : null;
+      const marginClass =
+        margin == null ? "" : margin >= 0 ? " craft-order-margin--pos" : " craft-order-margin--neg";
+      const selected = row.name === selectedElixir ? " craft-order-row--selected" : "";
+      return `
+      <tr class="craft-order-row${selected}" data-craft-order-elixir="${row.name}" tabindex="0">
+        <td class="num craft-order-rank">${i + 1}</td>
+        <td>${materialCell(row.marketId, row.name, iconOverrides, { link: false })}</td>
+        <td class="num">${formatSilver(row.costPerCraft)}${missing}</td>
+        <td class="num">${formatSilver(row.costPerGreen)}${missing}</td>
+        <td class="num">${row.marketPrice != null ? formatSilver(row.marketPrice) : "—"}</td>
+        <td class="num${marginClass}">${margin != null ? `${margin >= 0 ? "+" : "−"}${formatSilver(Math.abs(margin))}` : "—"}</td>
+      </tr>`;
+    })
+    .join("");
+
+  body.innerHTML = `
+    <div class="craft-order-scroll">
+      <table class="data-table craft-order-table">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Elixir</th>
+            <th class="num">Cost / craft</th>
+            <th class="num">Cost / green</th>
+            <th class="num">CM price</th>
+            <th class="num">Margin</th>
+          </tr>
+        </thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+    </div>
+    <p class="compare-footnote muted">Cost / green assumes ~${greensPerCraft} greens per craft. Margin = CM price − cost per green. Click a row to open it in Elixirs mode.</p>
+    ${anyMissing ? '<p class="compare-footnote muted">* Some material prices missing — ranked last; click Refresh EU Prices.</p>' : ""}
   `;
 }
 

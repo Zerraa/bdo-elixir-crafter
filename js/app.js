@@ -1,10 +1,16 @@
-import { calcElixirsOnly, calcFullChain, calcPartyHarmony } from "./calculator.js";
+import {
+  calcElixirsOnly,
+  calcFullChain,
+  calcPartyHarmony,
+  calcAllElixirsPerCraft,
+} from "./calculator.js";
 import {
   loadPrices,
   bootstrapStaticPrices,
   collectMarketIds,
   collectCompareMarketIds,
   collectFullCraftMarketIds,
+  collectCraftOrderMarketIds,
   computeTotalCost,
 } from "./prices.js";
 import { buildIconOverrides } from "./icons.js";
@@ -15,6 +21,7 @@ import {
   renderShoppingList,
   renderMarketStatus,
   renderCompare,
+  renderCraftOrder,
   renderAppLoading,
   populateElixirSelect,
   populatePartyVariants,
@@ -57,6 +64,7 @@ const state = {
 };
 
 let compareOpen = false;
+let craftOrderOpen = false;
 let refreshInFlight = false;
 let pendingPriceRefresh = false;
 let pendingPriceForce = false;
@@ -82,6 +90,23 @@ function collectAllComparePriceIds(calc) {
   }
   for (const id of collectFullCraftMarketIds(calc)) {
     ids.add(id);
+  }
+  return [...ids];
+}
+
+function collectCraftOrderPriceIds() {
+  return collectCraftOrderMarketIds(
+    calcAllElixirsPerCraft(craftingData, getPrefs()),
+    craftingData
+  );
+}
+
+function collectOpenDialogPriceIds(calc) {
+  const ids = new Set(
+    compareOpen ? collectAllComparePriceIds(calc) : collectMarketIds(calc)
+  );
+  if (craftOrderOpen) {
+    for (const id of collectCraftOrderPriceIds()) ids.add(id);
   }
   return [...ids];
 }
@@ -251,9 +276,7 @@ async function refreshPrices(force = false) {
   const calc = getCalcResult();
   if (!calc) return;
 
-  const ids = compareOpen
-    ? collectAllComparePriceIds(calc)
-    : collectMarketIds(calc);
+  const ids = collectOpenDialogPriceIds(calc);
 
   setRefreshing(true);
 
@@ -273,13 +296,13 @@ async function refreshPrices(force = false) {
   }
 }
 
-async function syncCompare() {
+async function syncDialogPrices() {
   if (!craftingData || refreshInFlight) return;
 
   const calc = getCalcResult();
   if (!calc) return;
 
-  const allIds = collectAllComparePriceIds(calc);
+  const allIds = collectOpenDialogPriceIds(calc);
   const missing = allIds.filter(
     (id) =>
       prices[String(id)]?.basePrice == null && prices[id]?.basePrice == null
@@ -319,7 +342,25 @@ async function openCompareModal() {
   const dialog = document.getElementById("compare-dialog");
   if (btn) btn.classList.add("active");
   if (dialog && !dialog.open) dialog.showModal();
-  await syncCompare();
+  await syncDialogPrices();
+}
+
+function closeCraftOrder() {
+  craftOrderOpen = false;
+  const btn = document.getElementById("craft-order-btn");
+  const dialog = document.getElementById("craft-order-dialog");
+  if (btn) btn.classList.remove("active");
+  if (dialog?.open) dialog.close();
+}
+
+async function openCraftOrderModal() {
+  craftOrderOpen = true;
+  const btn = document.getElementById("craft-order-btn");
+  const dialog = document.getElementById("craft-order-dialog");
+  if (btn) btn.classList.add("active");
+  if (dialog && !dialog.open) dialog.showModal();
+  renderAll();
+  await syncDialogPrices();
 }
 
 function renderAll() {
@@ -339,6 +380,19 @@ function renderAll() {
       ...priceMeta,
       loading: refreshInFlight,
     }, prefs);
+  }
+  if (craftOrderOpen) {
+    renderCraftOrder(
+      calcAllElixirsPerCraft(craftingData, prefs),
+      prices,
+      craftingData,
+      {
+        ...prefs,
+        iconOverrides,
+        loading: refreshInFlight,
+        selectedElixir: state.mode === "elixirs" ? state.elixirName : null,
+      }
+    );
   }
   renderBreakdown(calc, craftingData, prefs, iconOverrides);
   renderShoppingList(calc, prices, state.sortBy, { ...prefs, iconOverrides });
@@ -502,6 +556,56 @@ function bindCompare() {
   });
 }
 
+function selectElixirFromCraftOrder(name) {
+  if (!craftingData?.elixirs[name]) return;
+  state.mode = "elixirs";
+  state.elixirName = name;
+  persistSession(state);
+  applyStateToUI();
+  closeCraftOrder();
+  updateMaterialsAndPrices();
+}
+
+function bindCraftOrder() {
+  const btn = document.getElementById("craft-order-btn");
+  const dialog = document.getElementById("craft-order-dialog");
+  const closeBtn = document.getElementById("craft-order-close");
+  const body = document.getElementById("craft-order-body");
+  if (!btn || !dialog) return;
+
+  btn.addEventListener("click", async () => {
+    if (craftOrderOpen) {
+      closeCraftOrder();
+    } else {
+      await openCraftOrderModal();
+    }
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => closeCraftOrder());
+  }
+
+  dialog.addEventListener("cancel", (e) => {
+    e.preventDefault();
+    closeCraftOrder();
+  });
+
+  dialog.addEventListener("click", (e) => {
+    if (e.target === dialog) {
+      closeCraftOrder();
+      return;
+    }
+    const row = e.target.closest("[data-craft-order-elixir]");
+    if (row) selectElixirFromCraftOrder(row.dataset.craftOrderElixir);
+  });
+
+  body?.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return;
+    const row = e.target.closest("[data-craft-order-elixir]");
+    if (row) selectElixirFromCraftOrder(row.dataset.craftOrderElixir);
+  });
+}
+
 function bindPrefs() {
   const lionForBear = document.getElementById("lion-for-bear");
   lionForBear.addEventListener("change", () => {
@@ -569,6 +673,7 @@ function bindAll() {
   bindSort();
   bindRefresh();
   bindCompare();
+  bindCraftOrder();
 }
 
 async function init() {

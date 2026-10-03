@@ -158,6 +158,12 @@ export function calcElixirsOnly(elixirName, crafts, data, prefs = {}) {
   };
 }
 
+export function calcAllElixirsPerCraft(data, prefs = {}) {
+  return Object.keys(data.elixirs).map((name) =>
+    calcElixirsOnly(name, 1, data, prefs)
+  );
+}
+
 function draughtForElixir(elixirName, data) {
   return data.draughts.find((d) => d.elixirs.includes(elixirName));
 }

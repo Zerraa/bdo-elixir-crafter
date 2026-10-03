@@ -551,6 +551,43 @@ export function computeFullCraftCost(calcResult, prices, prefs = {}) {
   };
 }
 
+export function collectCraftOrderMarketIds(perCraftResults, craftingData) {
+  const ids = new Set();
+  for (const calc of perCraftResults) {
+    for (const id of collectMarketIds(calc)) ids.add(id);
+    const codexId = craftingData.elixirs[calc.elixirName]?.codexId;
+    if (codexId) ids.add(codexId);
+  }
+  return [...ids];
+}
+
+export function computeCraftOrder(perCraftResults, prices, craftingData, prefs = {}) {
+  const greensPerCraft = craftingData.yields?.elixirAlchemy?.greenExpected ?? 2.5;
+
+  const rows = perCraftResults.map((calc) => {
+    const { total, hasMissing } = computeTotalCost(calc, prices, "green", prefs);
+    const codexId = craftingData.elixirs[calc.elixirName]?.codexId;
+    const marketPrice =
+      prices[String(codexId)]?.basePrice ?? prices[codexId]?.basePrice ?? null;
+    const costPerGreen = total / greensPerCraft;
+    return {
+      name: calc.elixirName,
+      marketId: codexId,
+      costPerCraft: total,
+      costPerGreen,
+      marketPrice,
+      hasMissing,
+    };
+  });
+
+  rows.sort((a, b) => {
+    if (a.hasMissing !== b.hasMissing) return a.hasMissing ? 1 : -1;
+    return a.costPerCraft - b.costPerCraft;
+  });
+
+  return { rows, greensPerCraft };
+}
+
 export function computeCompare(calcResult, prices, craftingData, prefs = {}) {
   const buy = computeBuyCost(calcResult, prices, craftingData);
   const craft = computeFullCraftCost(calcResult, prices, prefs);

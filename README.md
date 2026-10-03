@@ -60,6 +60,10 @@ The breakdown tree also shows additional valid substitutes (e.g. Yak Blood, Rhin
 | Harmony | Harmony Draughts × CM price | Catalyst only (elixirs assumed ready) |
 | Party | Party draught × CM price | Catalyst only (elixirs assumed ready) |
 
+### Craft Order
+
+Ranks every elixir by raw material cost per craft, cheapest first, using your current Options. Also shows cost per green (÷ ~2.5 greens), the CM price, and the margin (CM price − cost per green). Elixirs with missing prices are listed last. Click a row to open it in Elixirs mode.
+
 ### Blue elixirs
 
 Harmony mode can target **green** or **blue** draughts. Blues are upgraded via Simple Alchemy: **3× green + 1× Blue Reagent** (50k from Material Merchant). Blue elixirs have different names from their green versions (e.g. Elixir of Fury → Elixir of Endless Fury).

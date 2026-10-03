@@ -13,6 +13,7 @@
       <h1>Elixir Crafting</h1>
       <div class="header-actions">
         <span id="market-status" class="market-status">Loading prices…</span>
+        <button id="craft-order-btn" type="button" class="btn btn-secondary">Craft Order</button>
         <button id="compare-btn" type="button" class="btn btn-secondary">Buy vs Craft</button>
         <button id="refresh-btn" type="button" class="btn">Refresh EU Prices</button>
       </div>
@@ -174,6 +175,20 @@
         <button type="button" id="compare-close" class="btn-icon" aria-label="Close">×</button>
       </div>
       <div id="compare-body"></div>
+    </div>
+  </dialog>
+
+  <dialog id="craft-order-dialog" class="compare-dialog craft-order-dialog">
+    <div class="compare-modal">
+      <div class="compare-header">
+        <div>
+          <h2>Craft Order</h2>
+          <p class="muted compare-hint">Elixirs ranked by raw material cost per craft, cheapest first</p>
+          <p id="craft-order-sync-status" class="compare-sync-status muted"></p>
+        </div>
+        <button type="button" id="craft-order-close" class="btn-icon" aria-label="Close">×</button>
+      </div>
+      <div id="craft-order-body"></div>
     </div>
   </dialog>
 
