@@ -120,6 +120,7 @@ a:hover {
   max-width: min(560px, calc(100vw - 32px));
   width: 100%;
   background: transparent;
+  color: var(--text);
 }
 
 .compare-dialog::backdrop {
@@ -148,6 +149,10 @@ a:hover {
   font-size: 1.25rem;
   line-height: 1;
   padding: 4px 10px;
+}
+
+.btn-icon:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .btn-icon:hover {
